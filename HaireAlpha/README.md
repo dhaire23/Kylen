@@ -14,7 +14,7 @@ The default look is ALPHA NATURAL, with 24 more original looks across Creative, 
 ## Install it on your Galaxy (no developer tools needed)
 
 1. On your phone, open this repository on GitHub, go to `HaireAlpha/release/` and tap
-   **`HAIRE-Alpha-1.0.0-rc1.apk`**, then **Download** (the "View raw" / download button).
+   **`HAIRE-Alpha-1.0.0-rc2.apk`**, then **Download** (the "View raw" / download button).
 2. Open the downloaded file (from the notification or **My Files › Downloads**).
 3. Android will ask to allow installs from your browser or My Files:
    tap **Settings → Allow from this source**, go back, and tap **Install**.
@@ -44,8 +44,10 @@ Future builds are signed with the same key, so installing a newer APK updates th
   shutter and ISO shown. These come from the program in A/P/S/AUTO, or from you in M. The capture result is
   read back and written to EXIF.
 - **Aperture is virtual.** The phone's lens has a fixed physical aperture, which is always used for exposure
-  and written to EXIF. The virtual aperture is recorded separately. *Virtual bokeh is not available in this
-  build* (see Known limitations).
+  and written to EXIF. With **virtual bokeh** turned on (tap the Aperture dial, or Fn › Virtual bokeh), the virtual aperture
+  sets how much the background is blurred. This is experimental and added when the photo is saved; the viewfinder doesn't show it.
+  It uses on-device subject detection (people, pets and objects through Google Play services; an offline people-only fallback).
+  If no clear subject is found, the photo is saved without blur.
 - **Lenses are framing.** The app picks the best physical camera and crops as little as possible. Cropping
   never adds optical resolution, and the EXIF focal length is always the real one.
 

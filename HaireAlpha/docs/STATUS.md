@@ -25,11 +25,14 @@ Keep this file current: it is the hand-off record for long sessions / context co
 - [x] M8 RAW+JPEG/DNG, Memory Recall M1–M3, recipes (create/duplicate/rename/delete, import/export), .cube import, grid/level/histogram/zebras/peaking
 - [x] M9 Hardening: 73 tests, lint clean, startup race and GPU-failure fallbacks, bounded capture queue
 - [x] M10 Release candidate APK + docs
+- [x] rc2: experimental virtual bokeh (segmentation + optical blur model), arm64-only APK (50 MB)
 - [ ] Physical-device validation (`PHYSICAL_DEVICE_CHECKLIST.md`)
 
 ## Known limitations
-- **Virtual bokeh / computational depth: not implemented.** The UI says so wherever aperture appears. The virtual aperture
-  is recorded in metadata only. A natural result needs depth data or a segmentation model that this build doesn't include.
+- **Virtual bokeh is experimental** (rc2). It works from ML Kit subject segmentation (Play services, any subject) or the bundled
+  offline selfie model (people), with optics-derived blur (thin lens: virtual focal length, virtual aperture, focus distance).
+  There is no true depth map: blur grows smoothly with distance from the subject. It is applied at save time only, not in the
+  viewfinder, and skipped when the mask is not confident. JPEG only; RAW is never altered.
 - Not yet run on the SM-S948U. The highest-risk unverified areas are preview orientation in landscape, touch-focus coordinate
   mapping, logical multi-camera RAW (physical-camera switching), and DngCreator with logical-camera results.
 - Samsung's own multi-frame processing isn't available to third-party Camera2 apps; COMPUTATIONAL mode is single-frame
@@ -42,4 +45,4 @@ Keep this file current: it is the hand-off record for long sessions / context co
 ## Next steps (after the device checklist)
 1. Fix anything the checklist finds (orientation/focus mapping first).
 2. Use the Diagnostics export plus a ColorChecker DNG to add a measured per-sensor profile (`calibration.json`).
-3. Optional: computational bokeh (depth / segmentation), enable R8, and a subject-tracking AF overlay.
+3. Optional: live bokeh preview, a depth-aware model, enable R8, and a subject-tracking AF overlay.
