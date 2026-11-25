@@ -1,0 +1,924 @@
+{
+ "schema": 1,
+ "version": 1,
+ "looks": [
+  {
+   "id": "alpha_natural",
+   "name": "ALPHA NATURAL",
+   "category": "CREATIVE",
+   "description": "House rendering. Natural colour, rich skin, moderate contrast, smooth highlight roll-off.",
+   "tone": {
+    "contrast": 1.0,
+    "midOut": 0.46,
+    "shoulder": 0.6
+   },
+   "hueRestore": 0.8,
+   "highlightDesat": 0.5,
+   "saturation": 1.05,
+   "chromaCompression": 0.15,
+   "vibrance": 0.05,
+   "hueBands": [
+    {
+     "center": 135,
+     "width": 60,
+     "hueShift": -3,
+     "sat": 0.92,
+     "light": 0.0
+    },
+    {
+     "center": 250,
+     "width": 50,
+     "hueShift": -2,
+     "sat": 0.95,
+     "light": 0.0
+    },
+    {
+     "center": 28,
+     "width": 30,
+     "hueShift": 0,
+     "sat": 1.0,
+     "light": 0.0
+    }
+   ],
+   "skinProtect": 0.9
+  },
+  {
+   "id": "standard",
+   "name": "STANDARD",
+   "category": "CREATIVE",
+   "description": "Clean everyday colour with more punch and contrast.",
+   "tone": {
+    "contrast": 1.14,
+    "shadowDepth": 0.06,
+    "shoulder": 0.45
+   },
+   "hueRestore": 0.7,
+   "saturation": 1.17,
+   "vibrance": 0.05,
+   "chromaCompression": 0.1,
+   "hueBands": [
+    {
+     "center": 135,
+     "width": 60,
+     "hueShift": -2,
+     "sat": 0.97,
+     "light": 0.0
+    }
+   ],
+   "skinProtect": 0.9
+  },
+  {
+   "id": "neutral",
+   "name": "NEUTRAL",
+   "category": "CREATIVE",
+   "description": "Flat, honest colour with maximum latitude for editing.",
+   "tone": {
+    "contrast": 0.82,
+    "midOut": 0.46,
+    "shoulder": 0.85
+   },
+   "hueRestore": 0.9,
+   "highlightDesat": 0.35,
+   "saturation": 0.9,
+   "sharpening": 0.8,
+   "skinProtect": 0.95
+  },
+  {
+   "id": "portrait",
+   "name": "PORTRAIT",
+   "category": "CREATIVE",
+   "description": "Soft contrast and luminous, gently warm skin for every complexion.",
+   "tone": {
+    "contrast": 0.88,
+    "midOut": 0.47,
+    "shoulder": 0.85
+   },
+   "warmth": 1.2,
+   "saturation": 0.97,
+   "hueRestore": 0.9,
+   "hueBands": [
+    {
+     "center": 58,
+     "width": 50,
+     "hueShift": 0,
+     "sat": 1.0,
+     "light": 0.014
+    },
+    {
+     "center": 28,
+     "width": 30,
+     "hueShift": 0,
+     "sat": 0.88,
+     "light": 0.0
+    },
+    {
+     "center": 135,
+     "width": 60,
+     "hueShift": -3,
+     "sat": 0.9,
+     "light": 0.0
+    }
+   ],
+   "skinProtect": 1.0,
+   "sharpening": 0.7
+  },
+  {
+   "id": "vivid",
+   "name": "VIVID",
+   "category": "CREATIVE",
+   "description": "Bold saturation and contrast, still protecting skin and highlights.",
+   "tone": {
+    "contrast": 1.3,
+    "shadowDepth": 0.15,
+    "shoulder": 0.45
+   },
+   "hueRestore": 0.65,
+   "saturation": 1.6,
+   "vibrance": 0.15,
+   "chromaCompression": 0.1,
+   "hueBands": [
+    {
+     "center": 135,
+     "width": 60,
+     "hueShift": 0,
+     "sat": 1.05,
+     "light": 0.0
+    },
+    {
+     "center": 250,
+     "width": 50,
+     "hueShift": 0,
+     "sat": 1.05,
+     "light": 0.0
+    }
+   ],
+   "skinProtect": 0.8
+  },
+  {
+   "id": "landscape",
+   "name": "LANDSCAPE",
+   "category": "CREATIVE",
+   "description": "Crisp, cool daylight: deep skies and lush greens, protected highlights, extra definition.",
+   "tone": {
+    "contrast": 1.06,
+    "midOut": 0.44,
+    "shoulder": 0.85
+   },
+   "saturation": 1.05,
+   "warmth": -1.8,
+   "hueBands": [
+    {
+     "center": 135,
+     "width": 70,
+     "hueShift": 8,
+     "sat": 1.35,
+     "light": 0.0
+    },
+    {
+     "center": 245,
+     "width": 60,
+     "hueShift": 7,
+     "sat": 1.35,
+     "light": -0.055
+    },
+    {
+     "center": 100,
+     "width": 40,
+     "hueShift": 4,
+     "sat": 1.15,
+     "light": 0.0
+    },
+    {
+     "center": 28,
+     "width": 30,
+     "hueShift": 0,
+     "sat": 0.88,
+     "light": 0.0
+    }
+   ],
+   "sharpening": 1.2,
+   "clarity": 0.2,
+   "skinProtect": 0.9
+  },
+  {
+   "id": "deep",
+   "name": "DEEP",
+   "category": "CREATIVE",
+   "description": "Dark, dense and rich: low-key rendering with heavy shadows.",
+   "tone": {
+    "contrast": 1.16,
+    "midOut": 0.405,
+    "shadowDepth": 0.38,
+    "shoulder": 0.6
+   },
+   "saturation": 1.12,
+   "warmth": 1.0,
+   "chromaCompression": 0.2,
+   "hueBands": [
+    {
+     "center": 250,
+     "width": 60,
+     "hueShift": 0,
+     "sat": 1.0,
+     "light": -0.03
+    }
+   ],
+   "skinProtect": 0.85
+  },
+  {
+   "id": "soft",
+   "name": "SOFT",
+   "category": "CREATIVE",
+   "description": "Airy, bright and pastel with lifted shadows.",
+   "tone": {
+    "contrast": 0.8,
+    "midOut": 0.495,
+    "shoulder": 0.9,
+    "blackLift": 0.03,
+    "whiteClip": 0.985
+   },
+   "saturation": 0.8,
+   "warmth": -1.0,
+   "highlightDesat": 0.7,
+   "sharpening": 0.6,
+   "skinProtect": 0.9
+  },
+  {
+   "id": "monochrome",
+   "name": "MONOCHROME",
+   "category": "CREATIVE",
+   "description": "Clean, gentle digital black and white.",
+   "tone": {
+    "contrast": 0.92,
+    "shoulder": 0.7
+   },
+   "monochrome": {
+    "red": 0.3,
+    "green": 0.6,
+    "blue": 0.1
+   }
+  },
+  {
+   "id": "mono_hc",
+   "name": "HIGH CONTRAST MONO",
+   "category": "CREATIVE",
+   "description": "Graphic black and white: bright mid-tones, inky shadows.",
+   "tone": {
+    "contrast": 1.5,
+    "midOut": 0.49,
+    "shadowDepth": 0.45,
+    "shoulder": 0.35
+   },
+   "monochrome": {
+    "red": 0.42,
+    "green": 0.5,
+    "blue": 0.08
+   },
+   "grain": {
+    "amount": 0.012,
+    "size": 1.1,
+    "roughness": 0.0
+   }
+  },
+  {
+   "id": "classic_chrome",
+   "name": "CLASSIC CHROME INSPIRED",
+   "category": "CREATIVE",
+   "inspiredBy": "documentary slide-film aesthetic",
+   "description": "Muted documentary colour, firm shadows, cyan-leaning skies.",
+   "tone": {
+    "contrast": 1.08,
+    "shadowDepth": 0.15,
+    "shoulder": 0.55
+   },
+   "saturation": 0.78,
+   "chromaCompression": 0.3,
+   "hueRestore": 0.6,
+   "hueBands": [
+    {
+     "center": 245,
+     "width": 60,
+     "hueShift": -10,
+     "sat": 0.78,
+     "light": -0.02
+    },
+    {
+     "center": 28,
+     "width": 40,
+     "hueShift": 3,
+     "sat": 0.86,
+     "light": 0.0
+    },
+    {
+     "center": 135,
+     "width": 60,
+     "hueShift": -6,
+     "sat": 0.76,
+     "light": 0.0
+    },
+    {
+     "center": 100,
+     "width": 40,
+     "hueShift": 0,
+     "sat": 0.85,
+     "light": 0.0
+    }
+   ],
+   "shadowTint": {
+    "hue": 200,
+    "amount": 0.006
+   },
+   "skinProtect": 0.75
+  },
+  {
+   "id": "classic_negative",
+   "name": "CLASSIC NEGATIVE INSPIRED",
+   "category": "CREATIVE",
+   "inspiredBy": "consumer colour negative aesthetic",
+   "description": "Hard tonality, teal-shifted greens, cool shadows and warm highlights.",
+   "tone": {
+    "contrast": 1.2,
+    "shadowDepth": 0.22,
+    "shoulder": 0.5
+   },
+   "saturation": 0.88,
+   "hueRestore": 0.4,
+   "hueBands": [
+    {
+     "center": 135,
+     "width": 60,
+     "hueShift": 14,
+     "sat": 0.78,
+     "light": 0.0
+    },
+    {
+     "center": 28,
+     "width": 40,
+     "hueShift": -6,
+     "sat": 1.06,
+     "light": 0.0
+    },
+    {
+     "center": 240,
+     "width": 50,
+     "hueShift": -5,
+     "sat": 0.9,
+     "light": 0.0
+    }
+   ],
+   "shadowTint": {
+    "hue": 195,
+    "amount": 0.018
+   },
+   "highlightTint": {
+    "hue": 65,
+    "amount": 0.01
+   },
+   "skinProtect": 0.65
+  },
+  {
+   "id": "cinema",
+   "name": "CINEMA",
+   "category": "CREATIVE",
+   "description": "Soft cinematic contrast with teal shadows and warm highlights.",
+   "tone": {
+    "contrast": 0.92,
+    "midOut": 0.43,
+    "shoulder": 0.75
+   },
+   "saturation": 0.86,
+   "chromaCompression": 0.2,
+   "shadowTint": {
+    "hue": 210,
+    "amount": 0.02
+   },
+   "highlightTint": {
+    "hue": 65,
+    "amount": 0.016
+   },
+   "vignette": 0.15,
+   "skinProtect": 0.9
+  },
+  {
+   "id": "soft_matte",
+   "name": "SOFT MATTE",
+   "category": "CREATIVE",
+   "description": "Lifted blacks, matte highlights and cool shadows.",
+   "tone": {
+    "contrast": 0.9,
+    "blackLift": 0.075,
+    "whiteClip": 0.93,
+    "shoulder": 0.7
+   },
+   "saturation": 0.86,
+   "warmth": 1.0,
+   "shadowTint": {
+    "hue": 230,
+    "amount": 0.014
+   },
+   "sharpening": 0.7,
+   "skinProtect": 0.9
+  },
+  {
+   "id": "portra400",
+   "name": "PORTRA 400 INSPIRED",
+   "category": "FILM",
+   "inspiredBy": "portrait colour negative, ISO 400",
+   "description": "Natural skin, gentle highlights, restrained saturation, subtle warmth.",
+   "tone": {
+    "contrast": 0.92,
+    "midOut": 0.47,
+    "shoulder": 0.85
+   },
+   "hueRestore": 0.4,
+   "saturation": 0.9,
+   "warmth": 2.2,
+   "chromaCompression": 0.25,
+   "hueBands": [
+    {
+     "center": 55,
+     "width": 50,
+     "hueShift": 1,
+     "sat": 0.98,
+     "light": 0.01
+    },
+    {
+     "center": 135,
+     "width": 60,
+     "hueShift": -11,
+     "sat": 0.8,
+     "light": 0.0
+    },
+    {
+     "center": 245,
+     "width": 50,
+     "hueShift": -9,
+     "sat": 0.82,
+     "light": 0.0
+    },
+    {
+     "center": 28,
+     "width": 30,
+     "hueShift": 4,
+     "sat": 0.95,
+     "light": 0.0
+    }
+   ],
+   "highlightTint": {
+    "hue": 70,
+    "amount": 0.009
+   },
+   "shadowTint": {
+    "hue": 200,
+    "amount": 0.005
+   },
+   "grain": {
+    "amount": 0.012,
+    "size": 1.0,
+    "roughness": 0.4
+   },
+   "skinProtect": 0.85
+  },
+  {
+   "id": "portra800",
+   "name": "PORTRA 800 INSPIRED",
+   "category": "FILM",
+   "inspiredBy": "portrait colour negative, ISO 800",
+   "description": "Rich skin, warmer and deeper colour, organic grain.",
+   "tone": {
+    "contrast": 1.02,
+    "shadowDepth": 0.18,
+    "midOut": 0.445,
+    "shoulder": 0.75
+   },
+   "hueRestore": 0.4,
+   "saturation": 1.07,
+   "warmth": 4.5,
+   "chromaCompression": 0.12,
+   "hueBands": [
+    {
+     "center": 28,
+     "width": 40,
+     "hueShift": 0,
+     "sat": 1.1,
+     "light": 0.0
+    },
+    {
+     "center": 135,
+     "width": 60,
+     "hueShift": -7,
+     "sat": 0.88,
+     "light": 0.0
+    },
+    {
+     "center": 250,
+     "width": 50,
+     "hueShift": -5,
+     "sat": 0.92,
+     "light": 0.0
+    }
+   ],
+   "shadowTint": {
+    "hue": 50,
+    "amount": 0.012
+   },
+   "grain": {
+    "amount": 0.02,
+    "size": 1.25,
+    "roughness": 0.5
+   },
+   "skinProtect": 0.85
+  },
+  {
+   "id": "gold200",
+   "name": "GOLD 200 INSPIRED",
+   "category": "FILM",
+   "inspiredBy": "consumer colour negative, ISO 200",
+   "description": "Golden warmth and nostalgic everyday colour.",
+   "tone": {
+    "contrast": 0.98,
+    "midOut": 0.48,
+    "blackLift": 0.02,
+    "shoulder": 0.75
+   },
+   "hueRestore": 0.45,
+   "saturation": 1.12,
+   "warmth": 6.0,
+   "tint": 0.5,
+   "hueBands": [
+    {
+     "center": 100,
+     "width": 50,
+     "hueShift": -4,
+     "sat": 1.18,
+     "light": 0.0
+    },
+    {
+     "center": 135,
+     "width": 60,
+     "hueShift": -10,
+     "sat": 0.88,
+     "light": 0.0
+    },
+    {
+     "center": 245,
+     "width": 50,
+     "hueShift": -8,
+     "sat": 0.85,
+     "light": 0.01
+    }
+   ],
+   "highlightTint": {
+    "hue": 80,
+    "amount": 0.012
+   },
+   "grain": {
+    "amount": 0.016,
+    "size": 1.1,
+    "roughness": 0.5
+   },
+   "skinProtect": 0.75
+  },
+  {
+   "id": "ektar100",
+   "name": "EKTAR 100 INSPIRED",
+   "category": "FILM",
+   "inspiredBy": "fine-grain saturated colour negative",
+   "description": "Warm, rich colour separation with saturated reds and blues, crisp.",
+   "tone": {
+    "contrast": 1.18,
+    "shoulder": 0.55
+   },
+   "hueRestore": 0.35,
+   "saturation": 1.2,
+   "chromaCompression": 0.15,
+   "warmth": 3.0,
+   "hueBands": [
+    {
+     "center": 28,
+     "width": 40,
+     "hueShift": 3,
+     "sat": 1.22,
+     "light": 0.0
+    },
+    {
+     "center": 62,
+     "width": 30,
+     "hueShift": 0,
+     "sat": 1.1,
+     "light": 0.0
+    },
+    {
+     "center": 255,
+     "width": 50,
+     "hueShift": 7,
+     "sat": 1.22,
+     "light": 0.0
+    },
+    {
+     "center": 140,
+     "width": 60,
+     "hueShift": -5,
+     "sat": 0.92,
+     "light": 0.0
+    }
+   ],
+   "highlightTint": {
+    "hue": 70,
+    "amount": 0.006
+   },
+   "grain": {
+    "amount": 0.007,
+    "size": 0.8,
+    "roughness": 0.3
+   },
+   "sharpening": 1.1,
+   "skinProtect": 0.7
+  },
+  {
+   "id": "cinestill800t",
+   "name": "CINESTILL 800T INSPIRED",
+   "category": "FILM",
+   "inspiredBy": "tungsten-balanced motion picture stock",
+   "description": "Tungsten-balanced night colour: teal shadows, glowing reds, optional warm halation.",
+   "tone": {
+    "contrast": 1.05,
+    "midOut": 0.44,
+    "shoulder": 0.7
+   },
+   "hueRestore": 0.45,
+   "saturation": 0.92,
+   "warmth": -1.0,
+   "tint": 1.0,
+   "filmWhiteBalanceK": 3200,
+   "hueBands": [
+    {
+     "center": 28,
+     "width": 40,
+     "hueShift": -6,
+     "sat": 1.15,
+     "light": 0.0
+    },
+    {
+     "center": 135,
+     "width": 60,
+     "hueShift": 10,
+     "sat": 0.8,
+     "light": 0.0
+    }
+   ],
+   "shadowTint": {
+    "hue": 215,
+    "amount": 0.016
+   },
+   "highlightTint": {
+    "hue": 55,
+    "amount": 0.01
+   },
+   "halation": {
+    "amount": 0.22,
+    "threshold": 2.0,
+    "radius": 0.014,
+    "hue": 25
+   },
+   "grain": {
+    "amount": 0.022,
+    "size": 1.3,
+    "roughness": 0.5
+   },
+   "skinProtect": 0.55
+  },
+  {
+   "id": "trix400",
+   "name": "TRI-X 400 INSPIRED",
+   "category": "FILM",
+   "inspiredBy": "classic high-speed B&W negative",
+   "description": "Expressive documentary contrast and organic grain.",
+   "tone": {
+    "contrast": 1.32,
+    "midOut": 0.46,
+    "shadowDepth": 0.18,
+    "shoulder": 0.55
+   },
+   "monochrome": {
+    "red": 0.38,
+    "green": 0.5,
+    "blue": 0.12
+   },
+   "grain": {
+    "amount": 0.03,
+    "size": 1.4,
+    "roughness": 0.0
+   }
+  },
+  {
+   "id": "hp5",
+   "name": "HP5 PLUS 400 INSPIRED",
+   "category": "FILM",
+   "inspiredBy": "classic flexible B&W negative",
+   "description": "Classic warm-toned print look, flexible contrast, natural texture.",
+   "tone": {
+    "contrast": 1.1,
+    "midOut": 0.48,
+    "shoulder": 0.9
+   },
+   "monochrome": {
+    "red": 0.3,
+    "green": 0.58,
+    "blue": 0.12,
+    "toneHue": 75,
+    "toneAmount": 0.009
+   },
+   "grain": {
+    "amount": 0.024,
+    "size": 1.3,
+    "roughness": 0.0
+   }
+  },
+  {
+   "id": "forever",
+   "name": "FOREVER",
+   "category": "SIGNATURE",
+   "description": "Timeless editorial colour: natural skin, organic greens, gentle highlights, elegant contrast.",
+   "tone": {
+    "contrast": 1.1,
+    "midOut": 0.45,
+    "shadowDepth": 0.2,
+    "shoulder": 0.8
+   },
+   "hueRestore": 0.6,
+   "saturation": 0.95,
+   "chromaCompression": 0.22,
+   "warmth": 1.2,
+   "hueBands": [
+    {
+     "center": 132,
+     "width": 60,
+     "hueShift": -10,
+     "sat": 0.78,
+     "light": -0.012
+    },
+    {
+     "center": 245,
+     "width": 50,
+     "hueShift": -4,
+     "sat": 0.86,
+     "light": 0.0
+    },
+    {
+     "center": 28,
+     "width": 34,
+     "hueShift": 0,
+     "sat": 0.96,
+     "light": 0.0
+    },
+    {
+     "center": 100,
+     "width": 40,
+     "hueShift": -3,
+     "sat": 0.93,
+     "light": 0.0
+    }
+   ],
+   "highlightTint": {
+    "hue": 72,
+    "amount": 0.006
+   },
+   "shadowTint": {
+    "hue": 225,
+    "amount": 0.0055
+   },
+   "grain": {
+    "amount": 0.008,
+    "size": 0.9,
+    "roughness": 0.4
+   },
+   "skinProtect": 0.95
+  },
+  {
+   "id": "sunday_archive",
+   "name": "SUNDAY ARCHIVE",
+   "category": "SIGNATURE",
+   "description": "Warm, faded family-album colour with soft highlights.",
+   "tone": {
+    "contrast": 0.86,
+    "midOut": 0.47,
+    "blackLift": 0.045,
+    "whiteClip": 0.95,
+    "shoulder": 0.85
+   },
+   "hueRestore": 0.5,
+   "saturation": 0.78,
+   "warmth": 5.0,
+   "tint": 1.5,
+   "hueBands": [
+    {
+     "center": 130,
+     "width": 60,
+     "hueShift": -10,
+     "sat": 0.75,
+     "light": 0.0
+    },
+    {
+     "center": 240,
+     "width": 50,
+     "hueShift": -6,
+     "sat": 0.8,
+     "light": 0.0
+    }
+   ],
+   "highlightTint": {
+    "hue": 75,
+    "amount": 0.014
+   },
+   "shadowTint": {
+    "hue": 40,
+    "amount": 0.01
+   },
+   "grain": {
+    "amount": 0.016,
+    "size": 1.1,
+    "roughness": 0.5
+   },
+   "skinProtect": 0.85
+  },
+  {
+   "id": "after_hours",
+   "name": "AFTER HOURS",
+   "category": "SIGNATURE",
+   "description": "The city at night: rich blacks, warm light, restrained colour.",
+   "tone": {
+    "contrast": 1.1,
+    "midOut": 0.41,
+    "shadowDepth": 0.32,
+    "shoulder": 0.7
+   },
+   "saturation": 0.9,
+   "chromaCompression": 0.3,
+   "warmth": 1.5,
+   "hueBands": [
+    {
+     "center": 62,
+     "width": 50,
+     "hueShift": -2,
+     "sat": 1.08,
+     "light": 0.0
+    },
+    {
+     "center": 250,
+     "width": 50,
+     "hueShift": 0,
+     "sat": 0.85,
+     "light": 0.0
+    },
+    {
+     "center": 140,
+     "width": 60,
+     "hueShift": 8,
+     "sat": 0.75,
+     "light": 0.0
+    }
+   ],
+   "shadowTint": {
+    "hue": 225,
+    "amount": 0.014
+   },
+   "halation": {
+    "amount": 0.08,
+    "threshold": 2.5,
+    "radius": 0.01,
+    "hue": 30
+   },
+   "grain": {
+    "amount": 0.012,
+    "size": 1.0,
+    "roughness": 0.4
+   },
+   "skinProtect": 0.85
+  },
+  {
+   "id": "grit",
+   "name": "GRIT",
+   "category": "SIGNATURE",
+   "description": "Powerful monochrome for sport and documentary: dark skies, hard light.",
+   "tone": {
+    "contrast": 1.36,
+    "midOut": 0.41,
+    "shadowDepth": 0.3,
+    "shoulder": 0.6
+   },
+   "monochrome": {
+    "red": 0.7,
+    "green": 0.3,
+    "blue": 0.0
+   },
+   "clarity": 0.2,
+   "grain": {
+    "amount": 0.026,
+    "size": 1.2,
+    "roughness": 0.0
+   },
+   "sharpening": 1.1
+  }
+ ]
+}

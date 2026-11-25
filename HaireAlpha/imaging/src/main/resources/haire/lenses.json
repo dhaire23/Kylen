@@ -1,0 +1,170 @@
+{
+ "schema": 1,
+ "version": 1,
+ "lenses": [
+  {
+   "id": "p24_14",
+   "name": "24mm F1.4 GM Inspired",
+   "kind": "PRIME",
+   "minFocal": 24,
+   "maxFocal": 24,
+   "maxAperture": 1.4,
+   "minAperture": 16.0,
+   "category": "WIDE",
+   "core": true,
+   "note": ""
+  },
+  {
+   "id": "p35_14",
+   "name": "35mm F1.4 GM Inspired",
+   "kind": "PRIME",
+   "minFocal": 35,
+   "maxFocal": 35,
+   "maxAperture": 1.4,
+   "minAperture": 16.0,
+   "category": "STANDARD",
+   "core": true,
+   "note": ""
+  },
+  {
+   "id": "p40_25",
+   "name": "40mm F2.5 G Inspired",
+   "kind": "PRIME",
+   "minFocal": 40,
+   "maxFocal": 40,
+   "maxAperture": 2.5,
+   "minAperture": 22.0,
+   "category": "STANDARD",
+   "core": true,
+   "note": ""
+  },
+  {
+   "id": "p50_12",
+   "name": "50mm F1.2 GM Inspired",
+   "kind": "PRIME",
+   "minFocal": 50,
+   "maxFocal": 50,
+   "maxAperture": 1.2,
+   "minAperture": 16.0,
+   "category": "STANDARD",
+   "core": true,
+   "note": ""
+  },
+  {
+   "id": "p85_14",
+   "name": "85mm F1.4 GM II Inspired",
+   "kind": "PRIME",
+   "minFocal": 85,
+   "maxFocal": 85,
+   "maxAperture": 1.4,
+   "minAperture": 16.0,
+   "category": "PORTRAIT",
+   "core": true,
+   "note": ""
+  },
+  {
+   "id": "z24_50",
+   "name": "24-50mm F2.8 G Inspired",
+   "kind": "ZOOM",
+   "minFocal": 24,
+   "maxFocal": 50,
+   "maxAperture": 2.8,
+   "minAperture": 22.0,
+   "category": "STANDARD",
+   "core": true
+  },
+  {
+   "id": "z24_70",
+   "name": "24-70mm F2.8 GM II Inspired",
+   "kind": "ZOOM",
+   "minFocal": 24,
+   "maxFocal": 70,
+   "maxAperture": 2.8,
+   "minAperture": 22.0,
+   "category": "STANDARD",
+   "core": true
+  },
+  {
+   "id": "z70_200",
+   "name": "70-200mm F2.8 GM II Inspired",
+   "kind": "ZOOM",
+   "minFocal": 70,
+   "maxFocal": 200,
+   "maxAperture": 2.8,
+   "minAperture": 22.0,
+   "category": "TELE",
+   "core": true
+  },
+  {
+   "id": "z16_35",
+   "name": "16-35mm F2.8 GM II Inspired",
+   "kind": "ZOOM",
+   "minFocal": 16,
+   "maxFocal": 35,
+   "maxAperture": 2.8,
+   "minAperture": 22.0,
+   "category": "WIDE",
+   "core": false
+  },
+  {
+   "id": "p20_18",
+   "name": "20mm F1.8 G Inspired",
+   "kind": "PRIME",
+   "minFocal": 20,
+   "maxFocal": 20,
+   "maxAperture": 1.8,
+   "minAperture": 16.0,
+   "category": "WIDE",
+   "core": false,
+   "note": ""
+  },
+  {
+   "id": "p28_2",
+   "name": "28mm F2 Inspired",
+   "kind": "PRIME",
+   "minFocal": 28,
+   "maxFocal": 28,
+   "maxAperture": 2.0,
+   "minAperture": 22.0,
+   "category": "WIDE",
+   "core": false,
+   "note": ""
+  },
+  {
+   "id": "p50_14",
+   "name": "50mm F1.4 GM Inspired",
+   "kind": "PRIME",
+   "minFocal": 50,
+   "maxFocal": 50,
+   "maxAperture": 1.4,
+   "minAperture": 16.0,
+   "category": "STANDARD",
+   "core": false,
+   "note": ""
+  },
+  {
+   "id": "p90_28m",
+   "name": "90mm F2.8 Macro G Inspired",
+   "kind": "PRIME",
+   "minFocal": 90,
+   "maxFocal": 90,
+   "maxAperture": 2.8,
+   "minAperture": 22.0,
+   "category": "MACRO",
+   "core": false,
+   "note": "Framing only: a virtual macro profile does not change the phone's minimum focus distance."
+  },
+  {
+   "id": "p135_18",
+   "name": "135mm F1.8 GM Inspired",
+   "kind": "PRIME",
+   "minFocal": 135,
+   "maxFocal": 135,
+   "maxAperture": 1.8,
+   "minAperture": 22.0,
+   "category": "TELE",
+   "core": false,
+   "note": ""
+  }
+ ]
+}
