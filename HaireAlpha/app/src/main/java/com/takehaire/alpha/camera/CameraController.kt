@@ -148,7 +148,9 @@ class CameraController(private val manager: CameraManager, private val caps: Dev
     private var jpegReader: ImageReader? = null
     private var yuvReader: ImageReader? = null
     private var controls = PreviewControls()
-    private var tonemapPreset = false
+    /** Tone-curve mode we request so the preview/YUV transfer is known exactly (-1 = vendor default). */
+    private var tonemapRequest = -1
+    private var srgbCurve: android.hardware.camera2.params.TonemapCurve? = null
     var lastFrameDurationNs = 33_000_000L
         private set
 
@@ -195,7 +197,15 @@ class CameraController(private val manager: CameraManager, private val caps: Dev
                 s ?: error("No supported stream configuration")
                 session = s
                 spec = newSpec.copy(pathway = pathway)
-                tonemapPreset = info.supportsSrgbTonemap && info.manualPostProcessing
+                tonemapRequest = when {
+                    info.manualPostProcessing && info.supportsSrgbTonemap -> CameraMetadata.TONEMAP_MODE_PRESET_CURVE
+                    info.manualPostProcessing && info.supportsContrastCurve -> CameraMetadata.TONEMAP_MODE_CONTRAST_CURVE
+                    else -> -1
+                }
+                srgbCurve = if (tonemapRequest == CameraMetadata.TONEMAP_MODE_CONTRAST_CURVE) {
+                    val pts = com.takehaire.alpha.imaging.color.SrgbCurvePoints.points(minOf(info.maxTonemapPoints, 64))
+                    android.hardware.camera2.params.TonemapCurve(pts, pts, pts)
+                } else null
                 startRepeatingLocked()
                 _state.value = CamState.Ready(newSpec.cameraId, pathway)
             } catch (e: CameraAccessException) {
@@ -349,9 +359,15 @@ class CameraController(private val manager: CameraManager, private val caps: Dev
             }
         }
         if (info.edgeOff) b.set(CaptureRequest.EDGE_MODE, CameraMetadata.EDGE_MODE_OFF)
-        if (tonemapPreset) {
-            b.set(CaptureRequest.TONEMAP_MODE, CameraMetadata.TONEMAP_MODE_PRESET_CURVE)
-            b.set(CaptureRequest.TONEMAP_PRESET_CURVE, CameraMetadata.TONEMAP_PRESET_CURVE_SRGB)
+        when (tonemapRequest) {
+            CameraMetadata.TONEMAP_MODE_PRESET_CURVE -> {
+                b.set(CaptureRequest.TONEMAP_MODE, CameraMetadata.TONEMAP_MODE_PRESET_CURVE)
+                b.set(CaptureRequest.TONEMAP_PRESET_CURVE, CameraMetadata.TONEMAP_PRESET_CURVE_SRGB)
+            }
+            CameraMetadata.TONEMAP_MODE_CONTRAST_CURVE -> srgbCurve?.let {
+                b.set(CaptureRequest.TONEMAP_MODE, CameraMetadata.TONEMAP_MODE_CONTRAST_CURVE)
+                b.set(CaptureRequest.TONEMAP_CURVE, it)
+            }
         }
         val nr = if (still) CameraMetadata.NOISE_REDUCTION_MODE_MINIMAL else CameraMetadata.NOISE_REDUCTION_MODE_FAST
         when {
@@ -412,8 +428,14 @@ class CameraController(private val manager: CameraManager, private val caps: Dev
         }
     }
 
-    /** True when results confirm the sRGB preset tone curve is actually applied to the preview. */
-    val tonemapHonored: Boolean get() = tonemapPreset && _live.value.tonemapMode == CameraMetadata.TONEMAP_MODE_PRESET_CURVE
+    /** True when capture results confirm our sRGB tone curve (preset or explicit curve) is applied. */
+    val tonemapHonored: Boolean get() = tonemapRequest != -1 && _live.value.tonemapMode == tonemapRequest
+
+    val tonemapRequestLabel: String get() = when (tonemapRequest) {
+        CameraMetadata.TONEMAP_MODE_PRESET_CURVE -> "sRGB preset"
+        CameraMetadata.TONEMAP_MODE_CONTRAST_CURVE -> "explicit sRGB curve (${srgbCurve?.getPointCount(0) ?: 0} pts)"
+        else -> "vendor default"
+    }
 
     // ------------------------------------------------------------------ focus
     fun triggerFocus(region: MeteringRectangle?) {

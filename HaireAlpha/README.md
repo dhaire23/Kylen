@@ -14,7 +14,7 @@ The default look is ALPHA NATURAL, with 24 more original looks across Creative, 
 ## Install it on your Galaxy (no developer tools needed)
 
 1. On your phone, open this repository on GitHub, go to `HaireAlpha/release/` and tap
-   **`HAIRE-Alpha-1.0.0-rc2.apk`**, then **Download** (the "View raw" / download button).
+   **`HAIRE-Alpha-1.0.0-rc3.apk`**, then **Download** (the "View raw" / download button).
 2. Open the downloaded file (from the notification or **My Files › Downloads**).
 3. Android will ask to allow installs from your browser or My Files:
    tap **Settings → Allow from this source**, go back, and tap **Install**.

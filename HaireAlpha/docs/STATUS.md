@@ -46,3 +46,12 @@ Keep this file current: it is the hand-off record for long sessions / context co
 1. Fix anything the checklist finds (orientation/focus mapping first).
 2. Use the Diagnostics export plus a ColorChecker DNG to add a measured per-sensor profile (`calibration.json`).
 3. Optional: live bokeh preview, a depth-aware model, enable R8, and a subject-tracking AF overlay.
+
+## Field results from the SM-S948U (Android 17, diagnostics export, rc2)
+- Logical back camera 0 with physical cameras 2 (13.9 mm eq), 5 (23.9 mm, main), 6 (69.1 mm), 7 (117.2 mm).
+  All report RAW + DNG matrices + lens-shading map → **RAW pathway active**. hwLevel 3, manual sensor and post-processing.
+- ISO range 9–3200 reported (preview AE used ISO 4204 with 100% boost, i.e. beyond the advertised range).
+- Tone-map modes [CONTRAST_CURVE, FAST, HIGH_QUALITY]: **no sRGB preset**, so rc2 could not confirm the preview transfer,
+  which disabled RAW brightness anchoring. **rc3** sends an explicit 64-point sRGB contrast curve instead; Diagnostics now
+  shows the requested curve and the result mode, to be confirmed on the device.
+- OIS modes reported as [OFF] only (stabilisation, if any, is handled internally by the HAL).

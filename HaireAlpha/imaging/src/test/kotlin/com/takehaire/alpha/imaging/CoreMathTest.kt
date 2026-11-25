@@ -170,6 +170,18 @@ class CoreMathTest {
         }
     }
 
+    @Test fun srgbContrastCurveMatchesSrgbWithinHalfACode() {
+        val pts = com.takehaire.alpha.imaging.color.SrgbCurvePoints.points(64)
+        assertEquals(0f, pts[0], 0f); assertEquals(1f, pts[pts.size - 2], 0f); assertEquals(1f, pts.last(), 1e-6f)
+        var maxErr = 0.0
+        for (i in 0..4000) {
+            val x = i / 4000.0
+            val e = abs(com.takehaire.alpha.imaging.color.SrgbCurvePoints.eval(pts, x.toFloat()) - ColorMath.srgbEncode(x))
+            maxErr = maxOf(maxErr, e)
+        }
+        assertTrue("max error $maxErr", maxErr < 0.5 / 255)
+    }
+
     @Test fun skinHueCentreMatchesMonkSkinToneSwatches() {
         // Validates the skin region constant against real-world skin appearance data.
         val o = DoubleArray(3)

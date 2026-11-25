@@ -70,6 +70,8 @@ data class CameraInfo(
     val isBack get() = facing == CameraCharacteristics.LENS_FACING_BACK
     val supportsSrgbTonemap get() = CameraMetadata.TONEMAP_MODE_PRESET_CURVE in tonemapModes
     val supportsGammaTonemap get() = CameraMetadata.TONEMAP_MODE_GAMMA_VALUE in tonemapModes
+    val supportsContrastCurve get() = CameraMetadata.TONEMAP_MODE_CONTRAST_CURVE in tonemapModes && maxTonemapPoints >= 2
+    val maxTonemapPoints: Int get() = characteristics.get(CameraCharacteristics.TONEMAP_MAX_CURVE_POINTS) ?: 0
     val edgeOff get() = CameraMetadata.EDGE_MODE_OFF in edgeModes
     val lensShadingMap get() = CameraMetadata.STATISTICS_LENS_SHADING_MAP_MODE_ON in shadingMapModes
     val canDevelopRaw get() = raw && rawSizes.isNotEmpty() && colorModel != null && cfa != null && cfa <= 3 && lensShadingMap

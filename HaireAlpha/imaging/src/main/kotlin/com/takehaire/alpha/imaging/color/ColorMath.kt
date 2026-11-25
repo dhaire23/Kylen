@@ -287,3 +287,34 @@ object ColorMath {
 
     fun lerp(a: Double, b: Double, t: Double) = a + (b - a) * t
 }
+
+/**
+ * sRGB OETF as a Camera2 contrast curve: interleaved (in, out) pairs with denser points near black,
+ * for devices that support TONEMAP_MODE_CONTRAST_CURVE but not the sRGB preset.
+ */
+object SrgbCurvePoints {
+    fun points(n: Int): FloatArray {
+        val count = n.coerceIn(2, 128)
+        val out = FloatArray(count * 2)
+        for (i in 0 until count) {
+            val t = i / (count - 1.0)
+            val x = t * t
+            out[i * 2] = x.toFloat()
+            out[i * 2 + 1] = ColorMath.srgbEncode(x).toFloat()
+        }
+        return out
+    }
+
+    /** Piecewise-linear evaluation, as the camera ISP applies the curve. */
+    fun eval(points: FloatArray, x: Float): Float {
+        val n = points.size / 2
+        for (i in 1 until n) {
+            val x0 = points[(i - 1) * 2]; val x1 = points[i * 2]
+            if (x <= x1) {
+                val t = if (x1 > x0) (x - x0) / (x1 - x0) else 0f
+                return points[(i - 1) * 2 + 1] + (points[i * 2 + 1] - points[(i - 1) * 2 + 1]) * t
+            }
+        }
+        return points[(n - 1) * 2 + 1]
+    }
+}

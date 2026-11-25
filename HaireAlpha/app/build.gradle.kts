@@ -13,8 +13,8 @@ android {
         applicationId = "com.takehaire.alpha"
         minSdk = 29
         targetSdk = 36
-        versionCode = 2
-        versionName = "1.0.0-rc2"
+        versionCode = 3
+        versionName = "1.0.0-rc3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         // Modern Galaxy flagships are 64-bit ARM only; this keeps ML Kit's native code to one ABI.
         ndk { abiFilters += "arm64-v8a" }

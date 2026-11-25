@@ -48,7 +48,8 @@ fun diagnosticsReport(vm: CameraViewModel): String = buildString {
     l("Active camera id", ctl?.currentSpec?.cameraId)
     l("Capture pathway", (st as? CamState.Ready)?.pathway?.label)
     l("Active physical camera", live.activePhysicalId ?: "(not reported)")
-    l("sRGB tone curve honoured", ctl?.tonemapHonored)
+    l("Tone curve requested", ctl?.tonemapRequestLabel)
+    l("sRGB tone curve honoured", "${ctl?.tonemapHonored} (result mode ${live.tonemapMode})")
     l("Preview buffer", ctl?.previewBufferSize)
     l("Preview FPS", vm.stats.value?.fps?.let { "%.1f".format(Locale.US, it) })
     l("Preview exposure", if (live.exposureNs > 0) Stops.formatShutter(live.exposureNs / 1e9) else null)
@@ -67,7 +68,7 @@ fun diagnosticsReport(vm: CameraViewModel): String = buildString {
     l("Calibration", Assets.calibration.profiles.joinToString { "${it.id} v${it.version} ${it.source}" })
     l("Learned RAW baseline (EV)", vm.settings.value.learnedBaseline.entries.joinToString { "${it.key}: ${"%.2f".format(Locale.US, it.value)}" }.ifEmpty { null })
     append('\n')
-    if (last != null) {
+    if (last != null && last.requestedExposureNs > 0) {
         append("Last capture\n")
         l("  requested", "${Stops.formatShutter(last.requestedExposureNs / 1e9)} ISO ${last.requestedIso}")
         last.processed?.let { p ->
