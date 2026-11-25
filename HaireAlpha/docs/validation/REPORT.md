@@ -103,7 +103,7 @@ Darker complexions (MST 7–10) are rendered without lightening or greying: see 
 
 | Processing mode | step-edge overshoot (ALPHA NATURAL) |
 |---|---|
-| ALPHA NATURAL | 0.0 % |
+| NATURAL | 0.0 % |
 | PURE | 0.0 % |
 | COMPUTATIONAL | 1.0 % |
 
