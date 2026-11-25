@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — Big Grit Performance</title>
+<meta name="description" content="How Big Grit Performance collects and uses the information you share through this website.">
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#070908">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="stylesheet" href="assets/css/main.css">
+<style>
+  .legal { padding: calc(var(--nav-h) + 60px) 0 120px; }
+  .legal .wrap { max-width: 860px; }
+  .legal h1 { font-stretch: 62%; font-weight: 860; text-transform: uppercase; font-size: clamp(3.4rem, 9vw, 7rem); line-height: .86; margin: 24px 0 18px; }
+  .legal h2 { font-stretch: 80%; font-weight: 640; font-size: 1.6rem; margin: 48px 0 12px; letter-spacing: -.01em; }
+  .legal p, .legal li { color: var(--bone-2); }
+  .legal a { color: var(--grit); text-decoration: underline; text-underline-offset: 3px; }
+  .legal .note { border: 1px dashed rgba(198,239,120,.45); padding: 14px 16px; font-size: 14px; color: var(--mute); }
+  .nav { background: rgba(7,9,8,.92); border-bottom: 1px solid var(--line); }
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="./"><span class="logo-word">BIG GRIT</span><span class="logo-sub">Performance</span></a>
+    <a class="btn btn--grit btn--sm" href="./#apply"><span>Apply</span></a>
+  </div>
+</header>
+<main class="legal">
+  <div class="wrap">
+    <p class="label"><span>Legal</span> Last updated <span data-updated>2026</span></p>
+    <h1>Privacy policy</h1>
+    <p class="note">Plain-language template prepared for launch. Have it reviewed for your specific business, tools and location before relying on it.</p>
+
+    <h2>Who we are</h2>
+    <p>Big Grit Performance provides personal training in Dallas–Fort Worth, Texas and online coaching. This policy explains what information this website collects and how it is used.</p>
+
+    <h2>What we collect</h2>
+    <ul>
+      <li><strong>Information you submit</strong> in the coaching application: name, email, optional phone number, training preferences, goals, start timeline, any message you write, and your consent to be contacted.</li>
+      <li><strong>Find Your Grit answers</strong>, if you take the assessment and then submit an application. Answers stay in your browser and are not sent unless you submit the form.</li>
+      <li><strong>How you found us</strong>: the referring website and campaign tags in the link you used (for example, Instagram), attached to your application.</li>
+      <li><strong>Analytics</strong>: if enabled, aggregated usage data such as pages viewed and buttons clicked, collected through Google Analytics and/or the Meta Pixel using cookies or similar technologies.</li>
+    </ul>
+
+    <h2>How we use it</h2>
+    <ul>
+      <li>To review your application and reply about coaching.</li>
+      <li>To schedule and prepare for consultations.</li>
+      <li>To understand which channels bring people to the site, and improve it.</li>
+    </ul>
+    <p>We do not sell your personal information. We only contact you about coaching because you asked us to, and you can ask us to stop at any time.</p>
+
+    <h2>Who processes it</h2>
+    <p>We use trusted service providers to run this website: our website host and form provider (which stores application submissions), our scheduling tool if you book a consultation, and analytics providers if enabled. They process data on our behalf under their own security and privacy terms.</p>
+
+    <h2>How long we keep it</h2>
+    <p>We keep application details for as long as needed to respond and, if you become a client, for the duration of coaching and a reasonable period after. Ask us at any time to delete your information.</p>
+
+    <h2>Your choices</h2>
+    <ul>
+      <li>Ask what information we hold about you, correct it, or delete it.</li>
+      <li>Opt out of follow-up messages by replying “stop” or emailing us.</li>
+      <li>Block or delete cookies in your browser settings, or use tools such as the Google Analytics opt-out add-on.</li>
+    </ul>
+
+    <h2>Health information</h2>
+    <p>Please don't include detailed medical information in the website form. If an injury or condition is relevant, mention it briefly and we'll discuss it privately during your consultation.</p>
+
+    <h2>Contact</h2>
+    <p data-contact>For any privacy question or request, contact Big Grit Performance through the application form on our website.</p>
+  </div>
+</main>
+<script src="config/site.config.js"></script>
+<script>
+  (function () {
+    var s = window.BIG_GRIT_SITE || {};
+    var el = document.querySelector('[data-contact]');
+    if (s.contactEmail && el) {
+      el.textContent = 'For any privacy question or request, email ';
+      var a = document.createElement('a'); a.href = 'mailto:' + s.contactEmail; a.textContent = s.contactEmail;
+      el.appendChild(a); el.appendChild(document.createTextNode('.'));
+    }
+    var u = document.querySelector('[data-updated]'); if (u) u.textContent = new Date(document.lastModified).toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+  })();
+</script>
+</body>
+</html>
