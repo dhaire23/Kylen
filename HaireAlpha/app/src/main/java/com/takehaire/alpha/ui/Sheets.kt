@@ -86,8 +86,12 @@ fun SheetHost(vm: CameraViewModel, sheet: Sheet, onDismiss: () -> Unit) {
                     ValueWheel("VIRTUAL APERTURE", vm.apertureValues().map { Stops.formatAperture(it) }, Stops.nearestIndex(vm.apertureValues(), vm.current.virtualAperture)) { i ->
                         vm.updatePreset { it.copy(virtualAperture = vm.apertureValues()[i]) }
                     }
+                    val bokehOn = vm.settings.collectAsState().value.current.bokeh
+                    Row(Modifier.padding(top = 8.dp)) {
+                        Chip(if (bokehOn) "VIRTUAL BOKEH: ON" else "VIRTUAL BOKEH: OFF", highlighted = bokehOn) { vm.setBokeh(!bokehOn) }
+                    }
                     Text(
-                        "The phone's lens has a fixed physical aperture; exposure always uses it. The virtual aperture is recorded in the photo's metadata and drives computational depth of field. Virtual bokeh is not available in this build, so it does not change the image yet.",
+                        "The phone's lens has a fixed physical aperture; exposure always uses it. With virtual bokeh on, the virtual aperture sets how much the background is blurred (experimental, added when the photo is saved; the viewfinder does not show it). If no clear subject is found, the photo is saved without blur.",
                         style = Hc.label.copy(fontSize = 11.sp, letterSpacing = 0.sp), modifier = Modifier.padding(top = 8.dp),
                     )
                 }
@@ -323,7 +327,7 @@ fun fnValue(vm: CameraViewModel, item: FnItem): String {
         FnItem.PROCESSING -> p.processing.label.substringBefore(' ').take(8)
         FnItem.FORMAT -> p.format.label
         FnItem.ASPECT -> p.aspect.label
-        FnItem.BOKEH -> "N/A"
+        FnItem.BOKEH -> if (p.bokeh) "ON" else "OFF"
         FnItem.HISTOGRAM -> if (s.histogram) "ON" else "OFF"
         FnItem.GRID -> if (s.grid) "ON" else "OFF"
         FnItem.MEMORY -> s.memorySlot?.let { "M${it + 1}" } ?: "—"
@@ -348,7 +352,7 @@ fun fnAction(vm: CameraViewModel, item: FnItem) {
         FnItem.PROCESSING -> vm.updatePreset { it.copy(processing = next(ProcessingMode.entries, it.processing)) }
         FnItem.FORMAT -> vm.updatePreset { it.copy(format = next(ImageFormat.entries, it.format)) }
         FnItem.ASPECT -> vm.updatePreset { it.copy(aspect = next(AspectRatio.entries, it.aspect)) }
-        FnItem.BOKEH -> vm.notify("Virtual bokeh is not available in this build. Your virtual aperture is still recorded with each photo.")
+        FnItem.BOKEH -> vm.setBokeh(!vm.current.bokeh)
         FnItem.HISTOGRAM -> vm.update { it.copy(histogram = !it.histogram) }
         FnItem.GRID -> vm.update { it.copy(grid = !it.grid) }
         FnItem.MEMORY -> vm.recallMemory(((vm.settings.value.memorySlot ?: -1) + 1) % 3)

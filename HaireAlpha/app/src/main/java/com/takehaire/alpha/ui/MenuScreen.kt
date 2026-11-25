@@ -130,9 +130,7 @@ private fun ShootingTab(vm: CameraViewModel) {
     ChoiceRow("Aspect ratio", AspectRatio.entries, p.aspect, { it.label }) { a -> vm.updatePreset { it.copy(aspect = a) } }
     ChoiceRow("Processing", ProcessingMode.entries, p.processing, { it.label }) { m -> vm.updatePreset { it.copy(processing = m) } }
     Text(p.processing.blurb, style = Hc.label.copy(letterSpacing = 0.sp, fontSize = 11.sp))
-    ToggleRow("Virtual bokeh", false, "Not available in this build — computational depth needs on-device depth data that this version does not yet produce reliably.") {
-        vm.notify("Virtual bokeh is not available in this build.")
-    }
+    ToggleRow("Virtual bokeh (experimental)", p.bokeh, "Blurs the background by the virtual aperture when the photo is saved. Skipped when no clear subject is found.") { vm.setBokeh(it) }
     Section("Memory recall")
     for (i in 0..2) {
         val m = s.memories[i]

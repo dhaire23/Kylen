@@ -16,6 +16,8 @@
         android:supportsRtl="true"
         android:largeHeap="true"
         android:theme="@style/Theme.HaireAlpha">
+        <!-- Lets Google Play services fetch the on-device subject model for virtual bokeh ahead of time. -->
+        <meta-data android:name="com.google.mlkit.vision.DEPENDENCIES" android:value="subject_segment" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

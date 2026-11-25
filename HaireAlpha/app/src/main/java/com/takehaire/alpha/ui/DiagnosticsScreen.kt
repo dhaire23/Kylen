@@ -61,7 +61,7 @@ fun diagnosticsReport(vm: CameraViewModel): String = buildString {
     l("Planned exposure", d?.let { "${Stops.formatShutter(it.exposureS)}  ISO ${it.iso}  meter ${Stops.formatEv(it.meterEv)}  ${it.warning}" })
     l("Virtual lens", vm.lens().name)
     vm.plan()?.let { p -> l("Lens plan", "camera ${p.source.cameraId} zoom ${"%.2f".format(Locale.US, p.zoomRatio)} crop ${"%.2f".format(Locale.US, p.digitalCrop)} ${p.cropClass} ${"%.1f".format(Locale.US, p.effectiveMegapixels)}MP") }
-    l("Virtual aperture", Stops.formatAperture(vm.current.virtualAperture) + " (bokeh not available)")
+    l("Virtual aperture", Stops.formatAperture(vm.current.virtualAperture) + if (vm.current.bokeh) " (virtual bokeh ON, experimental)" else " (bokeh off)")
     l("Active look", "${vm.activeLook.name} v${vm.activeLook.version}")
     l("Look library", "v${Assets.looks.version}")
     l("Calibration", Assets.calibration.profiles.joinToString { "${it.id} v${it.version} ${it.source}" })
@@ -92,7 +92,7 @@ fun diagnosticsReport(vm: CameraViewModel): String = buildString {
         append("  physical ${c.id}: focal ${c.focalLengths} f/${c.apertures} RAW ${c.raw} eq ${c.equivalentFocal(com.takehaire.alpha.imaging.lens.AspectRatio.R3_2)?.let { "%.1f".format(Locale.US, it) }}\n")
     }
     append("\nLimitations\n")
-    append("  - Virtual bokeh (computational depth) is not available in this build.\n")
+    append("  - Virtual bokeh is experimental: subject segmentation + optics-derived blur, applied at save time, not in the viewfinder.\n")
     append("  - Preview is an approximation when the sRGB tone curve is not honoured (≈ shown).\n")
     append("  - Samsung's own multi-frame processing is not available to third-party Camera2 apps.\n")
 }

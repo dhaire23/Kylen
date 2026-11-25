@@ -150,7 +150,7 @@ fun rememberExposureView(vm: CameraViewModel): ExposureView {
     val iso = if (isoAutoShown) "AUTO" else p.iso.toString()
     val isoSub = if (isoAutoShown) (d?.iso?.let { "ISO $it" } ?: "${p.isoMin}–${p.isoMax}") else null
     val phys = vm.controller?.info()?.apertures?.firstOrNull()
-    val apSub = "VIRTUAL" + (phys?.let { " · f/%.1f".format(java.util.Locale.US, it) } ?: "")
+    val apSub = if (p.bokeh) "BOKEH ON" else "VIRTUAL" + (phys?.let { " · f/%.1f".format(java.util.Locale.US, it) } ?: "")
     return ExposureView(
         shutter = shutter, shutterAuto = autoShutter, shutterSub = if (autoShutter) "MIN ${Stops.formatShutter(p.minShutterS)}" else null,
         aperture = Stops.formatAperture(p.virtualAperture), apertureSub = apSub,

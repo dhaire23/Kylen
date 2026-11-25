@@ -13,9 +13,11 @@ android {
         applicationId = "com.takehaire.alpha"
         minSdk = 29
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0.0-rc1"
+        versionCode = 2
+        versionName = "1.0.0-rc2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // Modern Galaxy flagships are 64-bit ARM only; this keeps ML Kit's native code to one ABI.
+        ndk { abiFilters += "arm64-v8a" }
     }
 
     signingConfigs {
@@ -82,6 +84,10 @@ dependencies {
     implementation(libs.androidx.exifinterface)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
+    // Experimental virtual bokeh: subject masks (Play services module, any subject) with a bundled
+    // offline people-only fallback. Used only when the photographer turns virtual bokeh on.
+    implementation(libs.mlkit.subject.segmentation)
+    implementation(libs.mlkit.selfie.segmentation)
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.graphics)

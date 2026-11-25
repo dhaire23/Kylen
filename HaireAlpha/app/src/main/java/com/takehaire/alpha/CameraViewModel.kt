@@ -395,6 +395,14 @@ class CameraViewModel(app: Application) : AndroidViewModel(app) {
 
     fun setIsoAuto(auto: Boolean) = updatePreset { it.copy(isoAuto = auto) }
 
+    fun setBokeh(on: Boolean) {
+        updatePreset { it.copy(bokeh = on) }
+        if (on) {
+            viewModelScope.launch(Dispatchers.IO) { processor?.prefetchBokehModel() }
+            notify("Virtual bokeh on (experimental): the background blur is added when the photo is saved, not in the viewfinder. Lower F numbers blur more.")
+        }
+    }
+
     fun stepAperture(d: Int) = updatePreset { p ->
         val v = apertureValues(); if (v.isEmpty()) return@updatePreset p
         val i = Stops.nearestIndex(v, p.virtualAperture)
@@ -596,7 +604,7 @@ class CameraViewModel(app: Application) : AndroidViewModel(app) {
             previewProduct = productSnapshot, tonemapHonored = ctl.tonemapHonored,
             lensName = if (s.frontCamera) "Front camera" else l.name,
             equivalentFocal = plan?.targetEquivalent ?: (info.equivalentFocal(p.aspect) ?: 0.0),
-            virtualAperture = if (p.bokeh) p.virtualAperture else null, cubeLut = cubeLut,
+            virtualAperture = if (p.bokeh) p.virtualAperture else null, cubeLut = cubeLut, cameraIdForBokeh = info.id,
         )
         playShutterSound()
         _pending.update { it + 1 }

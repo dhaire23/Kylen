@@ -19,6 +19,7 @@ import com.takehaire.alpha.imaging.lens.AspectRatio
 import com.takehaire.alpha.imaging.lens.LensMath
 import com.takehaire.alpha.imaging.look.LookSpec
 import com.takehaire.alpha.imaging.lut.Lut3D
+import com.takehaire.alpha.imaging.process.Bokeh
 import com.takehaire.alpha.imaging.process.DevelopParams
 import com.takehaire.alpha.imaging.process.StillDeveloper
 import com.takehaire.alpha.imaging.process.StripeSink
@@ -63,6 +64,7 @@ data class CaptureContext(
     val equivalentFocal: Double,
     val virtualAperture: Double?,
     val cubeLut: Lut3D?,
+    val cameraIdForBokeh: String = "",
 )
 
 data class ProcessedPhoto(
@@ -89,6 +91,40 @@ class CaptureProcessor(
     private val store: PhotoStore,
     private val luts: LutCache,
 ) {
+    private val segmenter by lazy { Segmenter(context) }
+
+    fun prefetchBokehModel() = segmenter.prefetch()
+
+    /**
+     * EXPERIMENTAL virtual bokeh on the finished photograph (never on RAW data). Returns a short
+     * description for metadata/notes, or null when bokeh is off.
+     */
+    private fun applyBokeh(bmp: Bitmap, c: CaptureContext, result: CaptureResult): String? {
+        val aperture = c.virtualAperture ?: return null
+        return try {
+            val long = maxOf(bmp.width, bmp.height)
+            val f = 1024f / long
+            val small = Bitmap.createScaledBitmap(bmp, (bmp.width * f).toInt().coerceAtLeast(1), (bmp.height * f).toInt().coerceAtLeast(1), true)
+            val mask = segmenter.mask(small) ?: return "skipped (no subject model available)"
+            small.recycle()
+            // Subject distance: from the focus distance when the lens reports a calibrated value.
+            val info = caps.info(c.cameraIdForBokeh)
+            val calib = info?.characteristics?.get(CameraCharacteristics.LENS_INFO_FOCUS_DISTANCE_CALIBRATION)
+            val dpt = result.get(CaptureResult.LENS_FOCUS_DISTANCE) ?: 0f
+            val subjectM = if (calib != null && calib != CameraCharacteristics.LENS_INFO_FOCUS_DISTANCE_CALIBRATION_UNCALIBRATED && dpt > 0.05f)
+                (1.0 / dpt).coerceIn(0.4, 15.0) else 1.8
+            val frac = LensMath.blurFraction(c.equivalentFocal.coerceAtLeast(14.0), aperture, subjectM, subjectM * 4.0)
+            val px = IntArray(bmp.width * bmp.height)
+            bmp.getPixels(px, 0, bmp.width, 0, 0, bmp.width, bmp.height)
+            val r = Bokeh.apply(px, bmp.width, bmp.height, mask.values, mask.width, mask.height, Bokeh.Params(frac))
+            if (r.applied) {
+                bmp.setPixels(px, 0, bmp.width, 0, 0, bmp.width, bmp.height)
+                "computational, ${mask.source} mask, subject ≈${"%.1f".format(Locale.US, subjectM)}m"
+            } else "skipped (${r.reason})"
+        } catch (e: Throwable) {
+            "skipped (${e.javaClass.simpleName})"
+        }
+    }
     fun process(b: CaptureBundle, c: CaptureContext): ProcessedPhoto {
         val t0 = System.currentTimeMillis()
         val timeMs = System.currentTimeMillis()
@@ -119,10 +155,12 @@ class CaptureProcessor(
                 val dev = develop(b, c, info, result, iso)
                 anchorEv = dev.anchorEv
                 whiteEv = dev.whiteEv
+                val bokeh = applyBokeh(dev.bitmap, c, result)
+                if (bokeh != null && bokeh.startsWith("skipped")) note = "Virtual bokeh $bokeh — the photo was saved without it."
                 val tmp = File(context.cacheDir, "$name.jpg")
                 try {
                     tmp.outputStream().use { dev.bitmap.compress(Bitmap.CompressFormat.JPEG, 95, it) }
-                    writeExif(tmp, c, info, result, dev.bitmap.width, dev.bitmap.height, timeMs, b.pathway)
+                    writeExif(tmp, c, info, result, dev.bitmap.width, dev.bitmap.height, timeMs, b.pathway, bokeh)
                     uris.add(store.saveFile("$name.jpg", "image/jpeg", timeMs, dev.bitmap.width, dev.bitmap.height, tmp))
                 } finally {
                     tmp.delete()
@@ -327,7 +365,7 @@ class CaptureProcessor(
         else -> ExifInterface.ORIENTATION_NORMAL
     }
 
-    private fun writeExif(file: File, c: CaptureContext, info: CameraInfo, r: CaptureResult, w: Int, h: Int, timeMs: Long, pathway: Pathway) {
+    private fun writeExif(file: File, c: CaptureContext, info: CameraInfo, r: CaptureResult, w: Int, h: Int, timeMs: Long, pathway: Pathway, bokeh: String?) {
         val e = ExifInterface(file)
         val fmt = java.text.SimpleDateFormat("yyyy:MM:dd HH:mm:ss", Locale.US)
         val now = fmt.format(java.util.Date(timeMs))
@@ -359,7 +397,7 @@ class CaptureProcessor(
         e.setAttribute(ExifInterface.TAG_FLASH, "0")
         e.setAttribute(ExifInterface.TAG_LENS_MAKE, Build.MANUFACTURER)
         e.setAttribute(ExifInterface.TAG_LENS_MODEL, "${Build.MODEL} camera ${info.id} ${info.focalLengths.firstOrNull() ?: "?"}mm f/${info.apertures.firstOrNull() ?: "?"}")
-        val va = c.virtualAperture?.let { "F%.1f".format(Locale.US, it) } ?: "off"
+        val va = c.virtualAperture?.let { "F%.1f".format(Locale.US, it) + (bokeh?.let { b -> " ($b)" } ?: "") } ?: "off"
         e.setAttribute(
             ExifInterface.TAG_USER_COMMENT,
             "HAIRE Alpha | Look: ${c.look.name} ${(c.intensity * 100).roundToInt()}% | Virtual lens: ${c.lensName} " +
