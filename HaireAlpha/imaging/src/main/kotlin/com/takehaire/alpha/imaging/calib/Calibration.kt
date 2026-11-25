@@ -69,7 +69,7 @@ data class SensorProfile(
  */
 @Serializable
 enum class ProcessingMode(val label: String, val blurb: String) {
-    NATURAL("ALPHA NATURAL", "Camera-like development: restrained NR and sharpening, no HDR."),
+    NATURAL("NATURAL", "Default. Camera-like development: restrained NR and sharpening, no HDR."),
     PURE("PURE", "Lightest touch: minimal NR and sharpening, no grain or halation. Best for editing."),
     COMPUTATIONAL("COMPUTATIONAL", "More noise reduction and gentle local tone compression for tough light."),
 }

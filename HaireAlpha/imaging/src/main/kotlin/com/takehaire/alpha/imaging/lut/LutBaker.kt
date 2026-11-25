@@ -50,6 +50,7 @@ object LutBaker {
         whiteEv: Double,
         size: Int = 65,
         post: Lut3D? = null,
+        displayReferredInput: Boolean = false,
     ): Lut3D = bake(size, "${look.id}-scene") { renderers ->
         val (lr, br) = renderers
         val tmp = DoubleArray(3)
@@ -63,7 +64,7 @@ object LutBaker {
             applyPost(post, tmp, pf)
             out[0] = tmp[0].toFloat(); out[1] = tmp[1].toFloat(); out[2] = tmp[2].toFloat()
         }
-    }.let { it(look, base, whiteEv, false) }
+    }.let { it(look, base, whiteEv, displayReferredInput) }
 
     fun bakePreview(
         look: LookSpec,

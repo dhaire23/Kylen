@@ -277,6 +277,12 @@ class PipelineTest {
         assertEquals(200, d.iso)
     }
 
+    @Test fun apertureModeWithFixedIsoComputesShutter() {
+        val d = ExposureProgram.decide(ShootingMode.A, 2.0, lim, AutoIsoSettings(), null, 400, isoAuto = false)
+        assertEquals(400, d.iso)
+        assertEquals(0.005, d.exposureS, 1e-12)
+    }
+
     @Test fun exposureChangesAreOneStopPerDoubling() {
         val a = ExposureProgram.decide(ShootingMode.M, 1.0, lim, AutoIsoSettings(), 1 / 100.0, 100)
         val b = ExposureProgram.decide(ShootingMode.M, 1.0, lim, AutoIsoSettings(), 1 / 50.0, 100)

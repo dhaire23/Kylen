@@ -121,10 +121,24 @@ object ExposureProgram {
         programShift: Double = 0.0,
         /** Manual mode with Auto ISO enabled. */
         manualAutoIso: Boolean = false,
+        /** P/A/S/AUTO: false = the photographer fixed ISO at [userIso]. */
+        isoAuto: Boolean = true,
     ): ExposureDecision {
         val e = meteredProduct.coerceAtLeast(1e-9)
         val isoLo = maxOf(auto.minIso, limits.minIso)
         val isoHi = minOf(auto.maxIso, limits.maxIso).coerceAtLeast(isoLo)
+        if (!isoAuto && userIso != null && mode != ShootingMode.M && mode != ShootingMode.AUTO) {
+            val iso = userIso.coerceIn(limits.minIso, limits.maxIso)
+            if (mode == ShootingMode.S) {
+                val t = (userShutterS ?: auto.minShutterS).coerceIn(limits.minExposureS, limits.maxExposureS)
+                val ev = Stops.log2(t * iso / e)
+                val w = if (ev < -0.17) ExposureWarning.UNDER else if (ev > 0.17) ExposureWarning.OVER else ExposureWarning.NONE
+                return ExposureDecision(t, iso, w, ev)
+            }
+            val tIdeal = e / iso
+            val t = tIdeal.coerceIn(limits.minExposureS, limits.maxExposureS)
+            return ExposureDecision(t, iso, warningFor(tIdeal, t), Stops.log2(t * iso / e))
+        }
         return when (mode) {
             ShootingMode.AUTO, ShootingMode.A -> autoIso(e, auto.minShutterS, isoLo, isoHi, limits)
             ShootingMode.P -> {
