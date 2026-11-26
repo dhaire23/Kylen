@@ -398,7 +398,17 @@
     $$('.slide', el.parentNode).forEach(function (s) { s.style.zIndex = s === el ? 3 : (prev && s === prev.el ? 2 : 1); });
     el.style.visibility = 'visible';
 
-    if (slide.video) { try { slide.video.currentTime = 0; } catch (e) { /* not seekable yet */ } playSafe(slide.video); }
+    if (slide.video) {
+      try { slide.video.currentTime = 0; } catch (e) { /* not seekable yet */ }
+      var pr = slide.video.play();
+      // Autoplay refused (Low Power Mode, browser policy, embedded viewers):
+      // drop this clip from the rotation so the stills keep the opening moving.
+      if (pr && pr.catch) pr.catch(function () {
+        if (hero.paused || !hero.visible || document.hidden) return;
+        slide.ready = false;
+        if (readySlides().length && hero.current === slide.idx) { if (hero.timer) hero.timer.kill(); nextSlide(); }
+      });
+    }
     // Warm up the next video so the cut is seamless.
     var ready = readySlides();
     var upcoming = ready.filter(function (s) { return s.idx > slide.idx; })[0] || ready[0];
