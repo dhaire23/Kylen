@@ -63,6 +63,8 @@ The mobile version is a centre crop — for the hero, export a dedicated vertica
 * `duration` is how long a hero slide holds before the next cut.
 * Shoot hero clips with motion *into* the frame and clean negative space on the left (desktop headline side) and lower third (mobile headline side).
 
-## What came from the original file
+## Where the current photos came from
 
-The original `GritFit_Interactive_Demo.html` contained **one authentic photograph** (Delone, single-arm dumbbell row), embedded twice. It's at `media/founder/delone-dumbbell-row.jpg` (731×1081) and is used as the fallback everywhere. It is too small for crisp full-screen desktop use, which is why the design presents it framed. **Please supply the original high-resolution export.**
+* The earlier Big Grit rendering: hero row photo (color, 1200×1800), playbook covers, client before/afters, Delone with a client, GRIT tank, lat pulldown and others.
+* Google Photos albums **"Club Studio/Absolute 8.16"** and **"10.11 Absolute Recomp"**: 15 selected shots, resized to 2000 px WebP (flash-cut stills, wide hero stills, founder chapters, coaching rows, Find Your Grit backdrop, jacket portrait, close-up).
+* The 8.16 album also holds **12 videos in 4K** (horizontal and vertical) — ideal for the `hero-0X` slots. Download them, then run `scripts/optimize-media.sh video …` to create the desktop/mobile files.

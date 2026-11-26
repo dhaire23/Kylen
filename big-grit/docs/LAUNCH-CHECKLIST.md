@@ -16,15 +16,16 @@
 
 ## 🔴 Required before going public
 
-- [ ] **Hero footage** — at least one `media/hero/hero-01-desktop.mp4` + `-mobile.mp4` (the opening currently runs on the one authentic still)
-- [ ] **High-resolution original** of the dumbbell-row photo (the embedded copy is 731×1081)
-- [ ] **Founder portrait** `media/founder/delone-portrait.jpg`
-- [ ] **Set `showPlaceholders: false`** in `config/media.config.js`
+- [ ] **Hero footage** — cut 2–3 clips from the 4K videos in the "Club Studio/Absolute 8.16" album into `media/hero/hero-01…03` (the opening currently runs on stills, which already look complete)
+- [x] Real photography in every section (earlier rendering + Google Photos albums); `showPlaceholders` is already `false`
+- [ ] **Client photos** — confirm each client in the three before/afters agreed in writing to appear on the site
+- [ ] **Payhip** — make a real test purchase of each playbook and confirm the PDF arrives (the earlier version noted checkout was still being tested)
+- [ ] **Football-era photo** for chapter 01 (Syracuse / Colts) — only if you hold usage rights
 - [ ] **Deploy to Netlify, enable form detection, add email notification, send a live test application** (see DEPLOY.md §2)
-- [ ] **`contactEmail`** in `config/site.config.js`
+- [x] `contactEmail`, Instagram, online application and macro calculator links set in `config/site.config.js` (confirm the email is the one Delone wants public)
 - [ ] **Domain** connected + `./scripts/set-domain.sh yourdomain.com`
 - [ ] **Delone reviews all copy**, in particular:
-  - founder chapters (career facts, the "setback", order of events, IFBB Pro wording) — only facts from the brief were used; no teams, years or titles were invented
+  - founder chapters — facts now come from the earlier Big Grit version (Pinstripe Bowl MVP at Syracuse, Colts 2011 draft, hip-replacement verdict, IFBB Pro card in Men's Physique)
   - coaching descriptions (in-person 1:1, online "structure, programming and accountability")
   - the assessment's result lines and "Your application goes straight to Delone"
 - [ ] **Privacy policy** reviewed for your tools and location
@@ -32,17 +33,15 @@
 ## 🟡 Strongly recommended for launch weekend
 
 - [ ] `bookingUrl` (Calendly / Cal.com) — turns applications into booked consultations immediately
-- [ ] `instagramUrl`
 - [ ] GA4 and/or Meta Pixel IDs; mark `generate_lead` as a key event
 - [ ] Closing film + "No shortcuts" detail band footage
 - [ ] Chapter photos 01–04 (NFL-era photo: confirm usage rights)
-- [ ] `pricingNote` if you want to show starting prices (left blank — no prices were invented)
+- [x] Investment shown from Delone's own application ($1,500–$5,000 online; private rates confirmed directly)
 - [ ] Test on a real iPhone (Low Power Mode blocks autoplay → poster is shown; that's expected)
 
 ## 🟢 After launch (future enhancements)
 
-- [ ] Real client transformations + testimonials (written consent; never stock or AI images)
-- [ ] Digital products in `products` with real checkout links (none existed in the original file)
+- [ ] Written client testimonials (real words, with permission)
 - [ ] Founder film (MP4 or YouTube/Vimeo link)
 - [ ] Automated follow-up emails (24 h / 72 h) and CRM — the automation plan from the original concept; connect via Netlify form notification → Zapier/Make → your CRM/email tool
 - [ ] Dedicated landing pages: "Personal trainer Dallas", "Online coaching" for search

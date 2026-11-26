@@ -63,6 +63,21 @@ window.BIG_GRIT_MEDIA = {
       src: "media/details/delone-lat-pulldown.webp",
       alt: "Delone Carter from behind at the top of a lat pulldown",
     },
+    deloneNeverStop: {
+      type: "image",
+      src: "media/editorial/delone-never-stop-bw.webp",
+      alt: "Delone Carter in a tank top looking into the camera, NEVER STOP sign behind him",
+    },
+    deloneCurl: {
+      type: "image",
+      src: "media/details/delone-curl-detail-bw.webp",
+      alt: "Close detail of Delone Carter mid-curl",
+    },
+    deloneCloseup: {
+      type: "image",
+      src: "media/founder/delone-closeup-bw.webp",
+      alt: "Close-up portrait of Delone Carter smiling, cap on backwards",
+    },
     deloneGritTank: {
       type: "image",
       src: "media/closing/delone-grit-tank.webp",
@@ -81,9 +96,9 @@ window.BIG_GRIT_MEDIA = {
      portrait window, before the opening sequence takes over full screen. */
   heroIntro: {
     stills: [
-      { src: "media/founder/delone-row-bw.webp", focus: "50% 30%", zoom: 1 },
-      { src: "media/founder/delone-back-pose.webp", focus: "50% 30%", zoom: 1 },
-      { src: "media/founder/delone-portrait.webp", focus: "50% 25%", zoom: 1 },
+      { src: "media/hero/flash-abs-bw.webp", focus: "50% 30%", zoom: 1 },
+      { src: "media/hero/flash-back-bw.webp", focus: "50% 35%", zoom: 1 },
+      { src: "media/founder/delone-front-pose-bw.webp", focus: "50% 30%", zoom: 1 },
     ],
   },
 
@@ -110,12 +125,12 @@ window.BIG_GRIT_MEDIA = {
     },
     {
       type: "image",
-      src: "media/hero/delone-seated-machine.webp",
+      src: "media/hero/delone-bench-row-wide-bw.webp",
       caption: "The work",
-      alt: "Delone Carter seated on a leg press machine in a dark gym",
+      alt: "Delone Carter rowing a dumbbell over a bench in a crowded gym",
       duration: 4.5,
       fit: "cover",
-      focus: "50% 35%",
+      focus: "55% 40%",
       motion: "drift",
     },
     {
@@ -130,12 +145,22 @@ window.BIG_GRIT_MEDIA = {
     },
     {
       type: "image",
-      src: "media/hero/delone-abs-cap.webp",
+      src: "media/hero/delone-neon-seated-wide-bw.webp",
       caption: "Every rep, earned",
-      alt: "Delone Carter pulling his cap down over his face, abs flexed",
+      alt: "Delone Carter seated under neon light lines between sets",
       duration: 4.5,
       fit: "cover",
-      focus: "50% 30%",
+      focus: "50% 45%",
+      motion: "push",
+    },
+    {
+      type: "image",
+      src: "media/hero/delone-sled-push.webp",
+      caption: "Dallas–Fort Worth",
+      alt: "Delone Carter driving a weighted sled toward the camera",
+      duration: 4.5,
+      fit: "frame",
+      focus: "50% 40%",
       motion: "push",
     },
     {
@@ -160,7 +185,7 @@ window.BIG_GRIT_MEDIA = {
       poster: "media/training/training-01-poster.jpg",
       alt: "Delone coaching a training session",
       focus: "50% 30%",
-      fallback: "deloneBackGym",
+      fallback: "deloneNeverStop",
       spec: "Training footage · 1600×2000 (4:5 vertical) MP4 · 6–10 s seamless loop · under 5 MB",
     },
     detail: {
@@ -168,7 +193,8 @@ window.BIG_GRIT_MEDIA = {
       src: "media/details/detail-01.mp4",
       poster: "media/details/detail-01-poster.jpg",
       alt: "Slow-motion detail: chalked hands gripping a barbell",
-      focus: "50% 50%",
+      focus: "50% 45%",
+      fallback: "deloneCurl",
       spec: "Cinematic detail (chalk, grip, breath, sweat) · 1440×1080 MP4 · 4–6 s loop · under 3 MB",
     },
   },
@@ -191,9 +217,9 @@ window.BIG_GRIT_MEDIA = {
   founder: {
     portrait: {
       type: "image",
-      src: "media/founder/delone-portrait.webp",
-      alt: "Portrait of Delone Carter, founder of Big Grit Performance",
-      focus: "50% 25%",
+      src: "media/founder/delone-portrait-jacket.webp",
+      alt: "Portrait of Delone Carter in a hooded jacket, looking into the camera",
+      focus: "50% 22%",
       fallback: "deloneRow",
       spec: "Founder portrait · 1600×2000 (4:5)",
     },
@@ -207,15 +233,15 @@ window.BIG_GRIT_MEDIA = {
       },
       {
         type: "image",
-        src: "media/founder/delone-back-pose.webp",
-        alt: "Delone Carter from behind, hands on his head",
+        src: "media/founder/delone-reflect-bw.webp",
+        alt: "Delone Carter from behind, hand on his head, in a dark gym",
         focus: "50% 30%",
       },
       {
         type: "image",
-        src: "media/founder/delone-row-bw.webp",
-        alt: "Delone Carter mid-set on a dumbbell row, looking into the camera",
-        focus: "50% 30%",
+        src: "media/founder/delone-front-pose-bw.webp",
+        alt: "Delone Carter in a front physique pose",
+        focus: "50% 25%",
         fallback: "deloneRow",
       },
       {
@@ -235,7 +261,7 @@ window.BIG_GRIT_MEDIA = {
     poster: "media/interview/founder-film-poster.jpg",
     title: "In his words",
     alt: "Founder film: Delone Carter on football, the hip replacement and rebuilding",
-    fallbackPoster: "deloneRow",
+    fallbackPoster: "deloneCloseup",
     spec: "Founder interview · 1920×1080 MP4 (H.264 + AAC audio) · 60–180 s · under 40 MB — or a YouTube/Vimeo link",
   },
 
@@ -245,22 +271,22 @@ window.BIG_GRIT_MEDIA = {
   coaching: {
     inPerson: {
       type: "image",
-      src: "media/editorial/coaching-in-person.webp",
-      alt: "Delone Carter laughing in the gym",
-      focus: "60% 35%",
+      src: "media/editorial/coaching-in-person-smile.webp",
+      alt: "Delone Carter smiling in the gym",
+      focus: "55% 35%",
       fallback: "deloneRow",
     },
     online: {
       type: "image",
-      src: "media/editorial/coaching-online.webp",
-      alt: "Delone Carter in profile, towel in hand",
-      focus: "50% 22%",
+      src: "media/editorial/coaching-online-tank.webp",
+      alt: "Delone Carter standing in a tank top in a training studio",
+      focus: "50% 25%",
       fallback: "deloneRow",
     },
     consult: {
       type: "image",
-      src: "media/editorial/delone-back-gym.webp",
-      alt: "Delone Carter from behind in the gym",
+      src: "media/details/delone-back-crowd-bw.webp",
+      alt: "Delone Carter from behind in a busy gym",
       focus: "50% 35%",
       fallback: "deloneRow",
     },
@@ -321,9 +347,9 @@ window.BIG_GRIT_MEDIA = {
   editorial: {
     assessment: {
       type: "image",
-      src: "media/editorial/find-your-grit.webp",
+      src: "media/editorial/find-your-grit-neon-bw.webp",
       alt: "",
-      focus: "50% 35%",
+      focus: "50% 40%",
       fallback: "deloneRow",
     },
     apply: {
