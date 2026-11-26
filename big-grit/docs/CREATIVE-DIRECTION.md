@@ -50,7 +50,7 @@ The brief named THE GRIND (primary), Corey Calliet, ACHV Fitness and Essor Fitne
 | Assessment | Answers stagger in; selection auto-advances |
 | Scrolling | Lenis smooth scroll on mouse/trackpad only; native scrolling on touch; no scroll-jacking or pinned hijacks |
 
-Everything collapses to a static, fully readable page under `prefers-reduced-motion` or without JavaScript, and the hero has a pause control.
+Under the "reduce motion" setting (iOS/macOS, Android "Remove animations") the page drops every zoom, wipe, parallax and sliding-text effect, but the opening still plays its muted footage and crossfades between slides, and section videos still play; the pause button stops all of it. Without JavaScript the page is static and fully readable.
 
 ## Shot list for your next session (to fill the slots)
 

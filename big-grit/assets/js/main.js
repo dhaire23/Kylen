@@ -21,6 +21,10 @@
   var saveData = !!(conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ''));
   var hasGSAP = !!(window.gsap && window.ScrollTrigger);
   var motion = hasGSAP && !reduceMotion;
+  /* "Reduce motion" (iOS/macOS setting, Android "Remove animations"): no zooms,
+     wipes, parallax or sliding text — but the opening still plays its muted
+     footage and crossfades gently between slides, with a pause button. */
+  var gentle = hasGSAP && reduceMotion;
   var gsap = window.gsap;
   var ST = window.ScrollTrigger;
   var lenis = null;
@@ -193,7 +197,7 @@
     el.appendChild(v);
     el.setAttribute('data-state', 'asset');
     if (item.focus) el.style.setProperty('--focus', item.focus);
-    if (!reduceMotion) videoIO.observe(v);
+    videoIO.observe(v);
   }
 
   function renderFallback(el, key, item) {
@@ -276,7 +280,7 @@
       var slide = { item: item, ready: false, el: null, media: null, video: null, idx: idx };
       hero.slides.push(slide);
       var isVideo = item.type === 'video';
-      if (isVideo && (saveData || reduceMotion)) {
+      if (isVideo && saveData) {
         // Still frames only: use the video's poster if it exists.
         if (!item.poster) return;
         probe(item.poster).then(function (ok) { if (ok !== false) buildImageSlide(slide, wrap, { src: item.poster, fit: 'cover', focus: item.focus, zoom: 1 }); });
@@ -373,6 +377,13 @@
 
   function startHero() {
     if (hero.started) return;
+    // If the sequence opens on a video that is still loading, give it a moment
+    // so the page opens on footage rather than on the next still.
+    var first = hero.slides[0];
+    if (first && first.item.type === 'video' && !first.ready && !saveData) {
+      if (!hero.firstDeadline) { hero.firstDeadline = Date.now() + 1500; setTimeout(startHero, 1550); }
+      if (Date.now() < hero.firstDeadline) return; // markReady() will call again as soon as it loads
+    }
     hero.started = true;
     // Prefer the first slide in config order that is ready.
     showSlide(readySlides()[0], true);
@@ -439,6 +450,16 @@
           if (hero.current !== prev.idx) { prev.el.style.visibility = 'hidden'; if (prev.video) prev.video.pause(); }
         });
       }
+    } else if (gentle) {
+      gsap.killTweensOf(el);
+      gsap.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 1.4, ease: 'power1.inOut' });
+      var gbar = $('[data-hero-progress]');
+      if (gbar) { gsap.killTweensOf(gbar); hero.barTween = gsap.fromTo(gbar, { scaleX: 0 }, { scaleX: 1, duration: dur, ease: 'none' }); }
+      if (prev && prev !== slide) {
+        gsap.delayedCall(1.5, function () {
+          if (hero.current !== prev.idx) { prev.el.style.visibility = 'hidden'; if (prev.video) prev.video.pause(); }
+        });
+      }
     } else {
       if (prev && prev !== slide) { prev.el.style.visibility = 'hidden'; if (prev.video) prev.video.pause(); }
     }
@@ -447,7 +468,7 @@
   }
 
   function scheduleNext(slide, dur) {
-    if (!motion) return; // reduced motion: no automatic cycling
+    if (!motion && !gentle) return; // no animation engine: hold the first slide
     if (hero.timer) hero.timer.kill();
     hero.timer = gsap.delayedCall(dur || Number(slide.item.duration) || 6, nextSlide);
   }
