@@ -18,6 +18,7 @@ The site checks which files exist when it loads. Missing files are skipped; pres
 |---|---|---|---|
 | Opening sequence | `heroSequence` (5 entries — add/remove/reorder freely) | `media/hero/hero-01-desktop.mp4` + `hero-01-mobile.mp4` + `hero-01-poster.jpg` (and 02, 03) | Desktop 1920×1080, mobile 1080×1920, H.264 MP4, **5–8 s, no audio, < 6 MB each** |
 | Opening poster (instant first paint) | `heroPoster` | currently the authentic photo | ≥ 1600 px tall |
+| Entrance flash-cut stills | `heroIntro.stills` (up to 4) | any photos, e.g. `media/hero/flash-01.jpg` | portrait 1600×2000+, strong and different from each other — currently two crops of the authentic photo |
 | Philosophy — training film | `philosophy.training` | `media/training/training-01.mp4` (+ poster) | 4:5 vertical, 1600×2000, 6–10 s seamless loop, < 5 MB |
 | Philosophy — detail | `philosophy.detail` | `media/details/detail-01.mp4` | 4:3, 1440×1080, 4–6 s loop, < 3 MB |
 | "No shortcuts." band | `detailBand` | `media/details/detail-02.mp4` (+ `-mobile.mp4`) | 21:9 or 16:9, 6–10 s slow-motion detail, < 6 MB |

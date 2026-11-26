@@ -6,7 +6,15 @@ Big Grit isn't sold as a gym service; it's presented as a campaign about a rebui
 
 ## References — what was and wasn't possible
 
-The brief named THE GRIND (primary), Corey Calliet, ACHV Fitness and Essor Fitness. **None of these sites could be reached from the build environment** (the network blocked all four domains), so their live pages, footage and animations were *not* inspected. The direction below is built from the qualities the brief describes — immediate full-screen motion, footage/stills interplay, oversized type, athletic campaign rhythm (THE GRIND); founder authority and conversion (Calliet/ACHV); editorial restraint and spacing (Essor) — interpreted into an original system. No assets or code from those sites were used.
+The brief named THE GRIND (primary), Corey Calliet, ACHV Fitness and Essor Fitness.
+
+* **THE GRIND (thegrind.nl)** — after the environment was opened to `www.thegrind.nl`, its **HTML, inline styles and inline scripts** were studied. Its CDN, video host and animation-script hosts stayed blocked, so the page was never seen *playing*: exact timings and easing in their external animation file are unknown. What the markup shows, and what Big Grit adapted (in its own code, type and colour — no assets or code reused):
+  * **Hero entrance:** two photographs and a looping video stacked in one frame, each masked shut from the bottom and revealed in turn; edge overlays that frame the media before it opens; an SVG logo drawn as a stroke → Big Grit's stroke-drawn wordmark, portrait "window" with flash-cut stills that lands on the live sequence and expands to full bleed.
+  * **Assessment step 1 inside the hero** ("Stap 1/4" + select + Next) → Big Grit's hero quick-start: answer question 1 there, land on question 2.
+  * **Founder video thumbnail in the hero** → the "Delone's story" film shortcut.
+  * **Split reveals by lines, words and characters; scroll-scrubbed text highlight; parallax with start/end values; a marquee that follows scroll direction and speed** → letter reveals on "Delone Carter" and "grit.", the existing line/word reveals, and a marquee that now reverses when you scroll up.
+  * Built on GSAP + ScrollTrigger + SplitText with Locomotive smooth scroll; Big Grit uses GSAP + ScrollTrigger with Lenis (touch devices keep native scrolling).
+* **Corey Calliet, ACHV, Essor** — not reachable from the build environment; not inspected. Their influence follows the brief's description only (founder authority and conversion; editorial restraint and spacing).
 
 ## Design system
 
@@ -27,12 +35,15 @@ The brief named THE GRIND (primary), Corey Calliet, ACHV Fitness and Essor Fitne
 
 | Moment | Behaviour |
 |---|---|
-| Brand reveal | "BIG GRIT" rises, then the screen splits open onto the already-playing hero. ≈1.3 s, once per visit, never blocks interaction |
+| Brand reveal | "BIG GRIT" draws itself in outline, fills, and the curtain lifts. ≈1.5 s, once per visit, never blocks interaction |
+| Entrance | The hero opens as a portrait window; stills from `heroIntro` cut in one after another, then the window expands to full screen onto the live sequence (every visit, ≈2 s) |
+| Hero quick-start | Desktop: Find Your Grit question 1 in the hero; Next lands on question 2 |
 | Opening sequence | Footage and stills cut with a bottom-up masked wipe; stills get a slow camera push or drift; progress bar + caption + counter like a broadcast lower third |
 | Headlines | Lines rise from behind a mask (expo-out) as they enter |
 | Images | Reveal through a vertical mask while scaling from 1.3 → 1 |
 | Philosophy | Statement words light up as you read (scroll-scrubbed) |
-| Manifesto band | Kinetic marquee that speeds up with scroll velocity |
+| Manifesto band | Kinetic marquee that speeds up with scroll velocity and reverses when you scroll up |
+| Founder name, closing line | Letter-by-letter reveal |
 | "No shortcuts." | The two words slide past each other over the footage |
 | Founder chapters | Sticky frame; each chapter wipes a new photograph over the last |
 | Coaching | Desktop: an image follows the cursor across each row, tilting with speed |

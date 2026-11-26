@@ -57,6 +57,17 @@ window.BIG_GRIT_MEDIA = {
      ------------------------------------------------------------------------ */
   heroPoster: "media/founder/delone-dumbbell-row.jpg",
 
+  /* Entrance "flash cut": up to 4 stills punched in one after another inside a
+     portrait window, before the opening sequence takes over full screen.
+     Best with 2–3 strong, different photos (1600×2000 or larger).
+     zoom > 1 makes a tighter, detail crop of the same photo. */
+  heroIntro: {
+    stills: [
+      { src: "media/founder/delone-dumbbell-row.webp", focus: "55% 30%", zoom: 1 },
+      { src: "media/founder/delone-dumbbell-row.webp", focus: "38% 40%", zoom: 1.6 },
+    ],
+  },
+
   heroSequence: [
     {
       type: "video",

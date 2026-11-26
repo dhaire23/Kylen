@@ -463,24 +463,82 @@
     }
     sSet('bg_intro_seen', '1');
     intro.classList.add('is-on');
-    var words = $$('.intro-word > span', intro);
-    var tl = gsap.timeline({
-      onComplete: function () { intro.remove(); root.classList.remove('intro-pending'); }
+    var txt = $('.intro-text', intro);
+    var started = false;
+    var play = function () {
+      if (started) return;
+      started = true;
+      var tl = gsap.timeline({
+        onComplete: function () { intro.remove(); root.classList.remove('intro-pending'); }
+      });
+      tl.to(txt, { strokeDashoffset: 0, duration: .9, ease: 'power2.inOut' })
+        .to(txt, { fillOpacity: 1, duration: .3, ease: 'power1.out' }, '-=.35')
+        .to(intro, { clipPath: 'inset(0% 0% 100% 0%)', duration: .8, ease: 'expo.inOut' }, '+=.05')
+        .add(done, '-=.75');
+    };
+    // Draw with the real typeface, but never wait more than 600 ms for it.
+    if (document.fonts && document.fonts.load) document.fonts.load('900 100px Archivo').then(play, play);
+    setTimeout(play, 600);
+  }
+
+  function buildFlashStills(wrap) {
+    if (!wrap) return [];
+    var cfg = (MEDIA.heroIntro && MEDIA.heroIntro.stills) || [];
+    var mobile = isPortraitPhone();
+    return cfg.filter(function (s) { return s && s.src; }).slice(0, 4).map(function (s) {
+      var el = document.createElement('div');
+      el.className = 'flash-still';
+      if (s.focus) el.style.setProperty('--focus', s.focus);
+      var img = makeImg(s.src, '', { eager: true });
+      img.addEventListener('error', function () { el.remove(); }, { once: true });
+      el.appendChild(img);
+      wrap.appendChild(el);
+      el.__zoom = mobile ? Math.min(Number(s.zoom) || 1, 1.25) : (Number(s.zoom) || 1);
+      return el;
     });
-    tl.fromTo(words, { yPercent: 110 }, { yPercent: 0, duration: .65, ease: 'expo.out', stagger: .07 })
-      .to(words, { yPercent: -110, duration: .5, ease: 'expo.in', stagger: .05 }, '+=.22')
-      .to($('.intro-panel--top', intro), { yPercent: -100, duration: .9, ease: 'expo.inOut' }, '-=.18')
-      .to($('.intro-panel--bottom', intro), { yPercent: 100, duration: .9, ease: 'expo.inOut' }, '<')
-      .add(done, '-=.75');
   }
 
   function heroEntrance() {
-    releaseHero();
-    if (!motion) return;
+    if (!motion) { releaseHero(); return; }
+    var stage = $('.hero-stage');
+    var flashWrap = $('[data-hero-flash]');
+    var stills = buildFlashStills(flashWrap);
+    var step = .34;
+    var land = .1 + stills.length * step + .15;
     var tl = gsap.timeline();
-    tl.fromTo('.hero-title .line > span', { yPercent: 108, y: 0 }, { yPercent: 0, duration: 1.25, ease: 'expo.out', stagger: .1 })
-      .fromTo('[data-hero-in]', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 1, ease: 'expo.out', stagger: .08, clearProps: 'transform' }, '-=.9')
+    stills.forEach(function (el, i) {
+      var at = .1 + i * step;
+      tl.to(el, { clipPath: 'inset(0% 0% 0% 0%)', duration: .7, ease: 'expo.inOut' }, at)
+        .fromTo($('img', el), { scale: el.__zoom * 1.3 }, { scale: el.__zoom, duration: 1.5, ease: 'expo.out' }, at);
+    });
+    tl.add(releaseHero, Math.max(0, land - .45));
+    if (stills.length) {
+      tl.to(flashWrap, { clipPath: 'inset(0% 0% 100% 0%)', duration: 1, ease: 'expo.inOut' }, land + .25)
+        .add(function () { flashWrap.innerHTML = ''; flashWrap.style.clipPath = ''; }, land + 1.3);
+    }
+    var from = stage ? getComputedStyle(stage).clipPath : 'none';
+    if (stage && from && from !== 'none') {
+      tl.fromTo(stage, { clipPath: from }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.6, ease: 'expo.inOut',
+        onComplete: function () { stage.style.clipPath = 'none'; } }, Math.max(.3, land - .25));
+    }
+    tl.fromTo('.hero-title .line > span', { yPercent: 140, y: 0 }, { yPercent: 0, duration: 1.25, ease: 'expo.out', stagger: .1 }, land)
+      .fromTo('[data-hero-in]', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 1, ease: 'expo.out', stagger: .08, clearProps: 'transform' }, land + .35)
       .fromTo('.hero-base img', { scale: 1.08 }, { scale: 1, duration: 2.4, ease: 'expo.out' }, 0);
+  }
+
+  /* Find Your Grit step 1, answered inside the opening */
+  function initHeroQuick() {
+    var sel = $('[data-hero-goal]'), next = $('[data-hero-next]');
+    if (!sel || !next) return;
+    var sync = function () { next.disabled = !sel.value; };
+    sel.addEventListener('change', sync);
+    sync();
+    next.addEventListener('click', function () {
+      if (!sel.value) { sel.focus(); return; }
+      track('assessment_start', { source: 'hero' });
+      if (quizApi.startWith) quizApi.startWith({ goal: sel.value });
+      scrollToEl($('#find-your-grit'));
+    });
   }
 
   /* 07 · Smooth scroll & navigation -------------------------------------- */
@@ -650,8 +708,26 @@
       if (inner) tl.fromTo(inner, { scale: 1.3 }, { scale: 1, duration: 1.9, ease: 'expo.out' }, 0);
     });
 
+    $$('[data-split-chars]').forEach(function (el) {
+      el.setAttribute('aria-label', el.textContent.replace(/\s+/g, ' ').trim());
+      var chars = [];
+      $$('.line > span', el).forEach(function (span) {
+        span.setAttribute('aria-hidden', 'true');
+        var text = span.textContent;
+        span.textContent = '';
+        Array.prototype.forEach.call(text, function (c) {
+          if (c === ' ') { span.appendChild(document.createTextNode(' ')); return; }
+          var ch = document.createElement('span'); ch.className = 'ch'; ch.textContent = c; span.appendChild(ch); chars.push(ch);
+        });
+      });
+      gsap.fromTo(chars, { yPercent: 112, y: 0, rotate: 7 }, {
+        yPercent: 0, rotate: 0, duration: 1.15, ease: 'expo.out', stagger: .035,
+        scrollTrigger: { trigger: el, start: 'top 86%', once: true }
+      });
+    });
+
     $$('[data-split-lines]').forEach(function (el) {
-      gsap.fromTo($$('.line > span', el), { yPercent: 108, y: 0 }, {
+      gsap.fromTo($$('.line > span', el), { yPercent: 140, y: 0 }, {
         yPercent: 0, duration: 1.25, ease: 'expo.out', stagger: .09,
         scrollTrigger: { trigger: el, start: 'top 86%', once: true }
       });
@@ -693,11 +769,13 @@
     if (!track) return;
     track.innerHTML += track.innerHTML; // seamless loop
     var tw = gsap.to(track, { xPercent: -50, duration: 34, ease: 'none', repeat: -1 });
+    tw.totalTime(tw.duration() * 200); // headroom so it can also run backwards
     ST.create({
       trigger: track, start: 'top bottom', end: 'bottom top',
       onUpdate: function (self) {
+        var dir = self.direction || 1;
         var v = Math.min(Math.abs(self.getVelocity()) / 300, 5);
-        gsap.to(tw, { timeScale: 1 + v, duration: .2, overwrite: true, onComplete: function () { gsap.to(tw, { timeScale: 1, duration: 1.2, ease: 'power2.out' }); } });
+        gsap.to(tw, { timeScale: dir * (1 + v), duration: .2, overwrite: true, onComplete: function () { gsap.to(tw, { timeScale: dir, duration: 1.2, ease: 'power2.out' }); } });
       }
     });
   }
@@ -728,6 +806,15 @@
     var frame = $('[data-film-frame]');
     var item = MEDIA.interview;
     if (!fig || !frame) return;
+    var heroFilm = $('[data-hero-film]');
+    var showHeroFilm = function (playable) {
+      if (!heroFilm) return;
+      heroFilm.hidden = false;
+      heroFilm.addEventListener('click', function () {
+        scrollToEl(fig);
+        if (playable) setTimeout(function () { var b = $('.film-play', frame); if (b) b.click(); }, reduceMotion ? 100 : 1500);
+      });
+    };
     if (!item || !item.src) { if (!placeholders) fig.hidden = true; else frame.innerHTML = placeholderHTML('interview', item || {}, false); return; }
     var embed = toEmbed(item.src);
     var posterLib = LIB[item.fallbackPoster];
@@ -753,6 +840,7 @@
     };
 
     if (embed) {
+      showHeroFilm(true);
       setPoster();
       addPlay(function () {
         frame.innerHTML = '<iframe src="' + esc(embed) + '" title="' + esc(item.title || 'Founder film') + '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
@@ -762,10 +850,12 @@
     probe(item.src).then(function (ok) {
       if (ok === false) {
         if (!placeholders) { fig.hidden = true; return; }
+        showHeroFilm(false);
         setPoster();
         frame.insertAdjacentHTML('beforeend', placeholderHTML('interview', item, true));
         return;
       }
+      showHeroFilm(true);
       setPoster();
       addPlay(function () {
         var v = document.createElement('video');
@@ -838,6 +928,7 @@
   };
   var answers = {};
   var qIndex = 0;
+  var quizApi = {};
 
   function priority() {
     if (!answers.timeline || !answers.ready) return '';
@@ -866,6 +957,12 @@
       render(true);
     });
     back.addEventListener('click', function () { if (qIndex > 0) { qIndex--; render(true); } });
+    quizApi.startWith = function (pre) {
+      answers = Object.assign({}, pre || {});
+      qIndex = Math.min(Object.keys(answers).length, QUESTIONS.length - 1);
+      sEl.hidden = true; rEl.hidden = true; qEl.hidden = false;
+      render(false);
+    };
     $('[data-quiz-restart]', box).addEventListener('click', function () {
       answers = {}; qIndex = 0; sDel('bg_assessment');
       rEl.hidden = true; qEl.hidden = false; render(true);
@@ -1224,6 +1321,7 @@
     initChapters();
     initOffers();
     initQuiz();
+    initHeroQuick();
     initResults();
     initProducts();
     initAttribution();
