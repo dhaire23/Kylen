@@ -16,13 +16,21 @@ window.BIG_GRIT_SITE = {
   /* ---------- Brand & contact ------------------------------------------ */
   brandName: "Big Grit Performance",
   // Public email shown as a fallback if a form ever fails. e.g. "coach@yourdomain.com"
-  contactEmail: "",
+  contactEmail: "thecarter2287@gmail.com",
   // Full Instagram URL, e.g. "https://www.instagram.com/yourhandle/"
-  instagramUrl: "",
+  instagramUrl: "https://www.instagram.com/delonecarter_ifbbpro/",
   // Optional extra socials (leave "" to hide)
   youtubeUrl: "",
   tiktokUrl: "",
   location: "Dallas–Fort Worth, Texas",
+
+  /* ---------- Existing GritFit pages (opened in a new tab) ------------- *
+   * onlineApplicationUrl: Delone's online coaching application. When set,
+   *   "Apply for online coaching" buttons go straight to it.
+   * macroCalculatorUrl: free macro calculator, offered as a free tool.
+   * --------------------------------------------------------------------- */
+  onlineApplicationUrl: "https://www.getgritfit.com/application",
+  macroCalculatorUrl: "https://www.getgritfit.com/macro-calculator",
 
   /* ---------- Application form ----------------------------------------- *
    * provider:
@@ -53,7 +61,7 @@ window.BIG_GRIT_SITE = {
    * "In-person packages from $X. Online coaching from $Y / month."
    * Leave "" to show nothing.
    * --------------------------------------------------------------------- */
-  pricingNote: "",
+  pricingNote: "Online coaching: Delone's application asks whether you're ready to invest $1,500 to $5,000. Private training rates are confirmed with Delone directly.",
 
   /* ---------- Analytics & conversion tracking ------------------------- *
    * Leave "" to disable. Scripts only load when an ID is present.
@@ -66,22 +74,39 @@ window.BIG_GRIT_SITE = {
   },
 
   /* ---------- Digital products (guides, playbooks) --------------------- *
-   * The original site file contained NO digital products, so this list
-   * starts empty and the Playbooks section is hidden.
-   * To sell a guide, copy the example below (remove the // marks).
+   * Delone's three $25 playbooks, sold and delivered through Payhip.
+   * Remove an entry to stop showing it; empty the list to hide the section.
    * checkoutUrl must be a real checkout: Stripe Payment Link, Shopify,
    * Gumroad, Stan Store, Lemon Squeezy, etc.
    * --------------------------------------------------------------------- */
   products: [
-    // {
-    //   title: "The Grit Playbook",
-    //   format: "PDF guide · 12-week program",
-    //   description: "One honest sentence about what the buyer gets.",
-    //   price: "$49",
-    //   image: "media/products/grit-playbook.jpg",   // 1200×1500 cover
-    //   checkoutUrl: "https://buy.stripe.com/your-link",
-    //   ctaLabel: "Get the playbook",
-    // },
+    {
+      title: "Muscle Gain",
+      format: "Self-guided PDF · Build",
+      description: "Mindset, training and nutrition fundamentals for putting on muscle. GritFit Gospel: for warriors, not wishers.",
+      price: "$25",
+      image: "media/products/muscle-gain.webp",
+      checkoutUrl: "https://payhip.com/b/WcaFE",
+      ctaLabel: "Buy on Payhip",
+    },
+    {
+      title: "Fat Loss Mastery",
+      format: "Self-guided PDF · Lean out",
+      description: "Calorie balance, consistency and habits you can keep. No myths, no magic: the math and the discipline it takes to get lean and stay that way.",
+      price: "$25",
+      image: "media/products/fat-loss-mastery.webp",
+      checkoutUrl: "https://payhip.com/b/jLk0r",
+      ctaLabel: "Buy on Payhip",
+    },
+    {
+      title: "Built to Bounce Back",
+      format: "Self-guided PDF · Recover",
+      description: "Recovery, fueling and sleep for the hours outside the gym — for lifters who don't take days off. Not a medical or rehabilitation program.",
+      price: "$25",
+      image: "media/products/built-to-bounce-back.webp",
+      checkoutUrl: "https://payhip.com/b/5UHCF",
+      ctaLabel: "Buy on Payhip",
+    },
   ],
 
   /* ---------- Client testimonials ------------------------------------- *

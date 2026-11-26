@@ -878,6 +878,13 @@
     return null;
   }
 
+  /* Existing GritFit pages and playbooks ------------------------------------ */
+  function appUrl() { return SITE.onlineApplicationUrl && /^https:\/\//.test(SITE.onlineApplicationUrl) ? SITE.onlineApplicationUrl : ''; }
+  function macroUrl() { return SITE.macroCalculatorUrl && /^https:\/\//.test(SITE.macroCalculatorUrl) ? SITE.macroCalculatorUrl : ''; }
+  function liveProducts() { return (SITE.products || []).filter(function (p) { return p && p.title && isSafeUrl(p.checkoutUrl) && /^https:\/\//.test(p.checkoutUrl); }); }
+  /* Which playbook to suggest for each Find Your Grit goal */
+  var GOAL_PLAYBOOK = { 'Build muscle & strength': 'Muscle Gain', 'Lose body fat': 'Fat Loss Mastery', 'Improve athletic performance': 'Built to Bounce Back' };
+
   /* 10 · Coaching -------------------------------------------------------- */
   function initOffers() {
     var offers = $$('.offer');
@@ -909,6 +916,17 @@
       }
     });
     if (SITE.pricingNote) { var p = $('[data-pricing-note]'); p.textContent = SITE.pricingNote; p.hidden = false; }
+    if (liveProducts().length) { var pn = $('[data-playbook-note]'); if (pn) pn.hidden = false; }
+    var online = $('[data-online-apply]');
+    if (online && appUrl()) {
+      online.href = appUrl();
+      online.target = '_blank';
+      online.rel = 'noopener';
+      online.setAttribute('data-cta', 'offer_online_application');
+      online.removeAttribute('data-format');
+      online.setAttribute('aria-label', 'Online coaching: apply on getgritfit.com (opens in a new tab)');
+      var c = $('.offer-cta', online); if (c) c.innerHTML = 'Apply ↗';
+    }
   }
 
   /* 11 · Find Your Grit assessment ---------------------------------------
@@ -1015,6 +1033,24 @@
       }, reduceMotion ? 120 : 380);
     }
 
+    function resultExtras() {
+      var ctas = $('.result-ctas', rEl);
+      var cont = $('[data-result-continue]', rEl);
+      var old = $('[data-result-app]', rEl); if (old) old.remove();
+      var oldPb = $('[data-result-playbook]', rEl); if (oldPb) oldPb.remove();
+      if (answers.mode === 'Online coaching' && appUrl()) {
+        ctas.insertAdjacentHTML('afterbegin', '<a class="btn btn--grit" data-result-app href="' + esc(appUrl()) + '" target="_blank" rel="noopener" data-track="cta_click" data-cta="assessment_online_application"><span>Apply for online coaching</span><i class="arrow" aria-hidden="true"></i></a>');
+        cont.classList.remove('btn--grit'); cont.classList.add('btn--line');
+        $('span', cont).textContent = 'Or send a quick inquiry';
+      } else {
+        cont.classList.add('btn--grit'); cont.classList.remove('btn--line');
+        $('span', cont).textContent = 'Continue to application';
+      }
+      var title = GOAL_PLAYBOOK[answers.goal];
+      var pb = liveProducts().filter(function (p) { return p.title === title; })[0];
+      if (pb) ctas.insertAdjacentHTML('afterend', '<p class="fine" data-result-playbook>Prefer to start on your own? <a class="link-inline" href="#playbooks" data-track="cta_click" data-cta="assessment_playbook">The ' + esc(pb.title) + ' playbook · ' + esc(pb.price || '') + '</a></p>');
+    }
+
     function showResult() {
       sSet('bg_assessment', JSON.stringify(answers));
       var rec = recommendation();
@@ -1023,6 +1059,7 @@
       var rows = [['Goal', answers.goal], ['Format', answers.mode], ['Obstacle', answers.challenge], ['Start', answers.timeline]];
       $('[data-result-profile]', box).innerHTML = rows.map(function (r) { return '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1] || '—') + '</dd></div>'; }).join('');
       qEl.hidden = true; rEl.hidden = false;
+      resultExtras();
       track('assessment_complete', { recommendation: rec.title, goal: answers.goal, format: answers.mode, timeline: answers.timeline });
       applyAssessmentToForm(true);
       if (motion) gsap.fromTo($$(':scope > *', rEl), { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .9, ease: 'expo.out', stagger: .07 });
@@ -1040,12 +1077,14 @@
       var rows = [['Goal', answers.goal], ['Format', answers.mode], ['Obstacle', answers.challenge], ['Start', answers.timeline]];
       $('[data-result-profile]', box).innerHTML = rows.map(function (r) { return '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1] || '—') + '</dd></div>'; }).join('');
       rEl.hidden = false;
+      resultExtras();
       applyAssessmentToForm(true);
     }
   }
 
   function setFormat(value) {
     $$('input[name="format"]').forEach(function (r) { r.checked = r.value === value; });
+    var f = $('[data-apply-form]'); if (f && f.__syncNote) f.__syncNote();
   }
   function setSelect(name, value) {
     var s = $('select[name="' + name + '"]');
@@ -1077,7 +1116,7 @@
     var section = $('[data-results]');
     var trackEl = $('[data-results-track]');
     if (!section || !trackEl) return;
-    var list = (MEDIA.transformations || []).filter(function (t) { return t && (t.before || t.after); });
+    var list = (MEDIA.transformations || []).filter(function (t) { return t && (t.image || t.before || t.after); });
     var quotes = (SITE.testimonials || []).filter(function (q) { return q && q.quote; });
     var shown = 0;
     var footage = $('[data-slot="clientFootage"]', section);
@@ -1091,12 +1130,48 @@
     };
     if (footage) footage.__onSlot = update;
 
+    // Cards are created in order and revealed once their photos are confirmed.
+    var slotCard = function (cls) {
+      var fig = document.createElement('figure');
+      fig.className = cls; fig.hidden = true;
+      trackEl.appendChild(fig);
+      return fig;
+    };
+    var reveal = function (fig) { fig.hidden = false; shown++; update(); };
+    var sizeTo = function (fig, img) {
+      var set = function () { if (img.naturalWidth) fig.querySelector('.rimg').style.setProperty('--rar', img.naturalWidth + ' / ' + img.naturalHeight); refreshSoon(); };
+      if (img.complete) set(); else img.addEventListener('load', set, { once: true });
+    };
+
+    var feat = MEDIA.resultFeature;
+    if (feat && feat.src) {
+      var ff = slotCard('tcard tcard--wide');
+      probe(feat.src).then(function (ok) {
+        if (ok === false) { ff.remove(); return; }
+        ff.innerHTML = '<div class="rimg"><img src="' + esc(feat.src) + '" alt="' + esc(feat.alt || '') + '" loading="lazy" decoding="async"></div>' +
+          '<figcaption><b>' + esc(feat.caption || '') + '</b><span></span></figcaption>';
+        sizeTo(ff, $('img', ff));
+        reveal(ff);
+      });
+    }
+
     list.forEach(function (t, i) {
+      if (t.image) {
+        var cf = slotCard('tcard tcard--wide');
+        probe(t.image).then(function (ok) {
+          if (ok === false) { if (placeholders) { cf.innerHTML = '<div class="cmp media">' + placeholderHTML('transformations.' + i, { src: t.image, spec: t.spec }, false) + '</div>'; reveal(cf); } else cf.remove(); return; }
+          cf.innerHTML = '<div class="rimg"><img src="' + esc(t.image) + '" alt="' + esc(t.alt || 'Client before and after') + '" loading="lazy" decoding="async">' +
+            (t.sideBySide ? '<span class="cmp-tag cmp-tag--b">Before</span><span class="cmp-tag cmp-tag--a">After</span>' : '') + '</div>' +
+            '<figcaption><b>' + esc(t.name || '') + '</b><span>' + esc(t.caption || '') + '</span></figcaption>';
+          sizeTo(cf, $('img', cf));
+          reveal(cf);
+        });
+        return;
+      }
+      var fig = slotCard('tcard');
       Promise.all([probe(t.before), probe(t.after)]).then(function (r) {
         var ok = r[0] !== false && r[1] !== false;
-        if (!ok && !placeholders) return;
-        var fig = document.createElement('figure');
-        fig.className = 'tcard';
+        if (!ok && !placeholders) { fig.remove(); return; }
         if (ok) {
           fig.innerHTML = '<div class="cmp">' +
             '<img src="' + esc(t.before) + '" alt="' + esc((t.name || 'Client') + ' before') + '" loading="lazy" decoding="async">' +
@@ -1110,9 +1185,7 @@
           fig.innerHTML = '<div class="cmp media">' + placeholderHTML('transformations.' + i, { src: t.before + '  +  ' + t.after, spec: t.spec }, false) + '</div>' +
             '<figcaption><b>Client ' + (i + 1) + '</b><span>Awaiting real, approved photos</span></figcaption>';
         }
-        trackEl.appendChild(fig);
-        shown++;
-        update();
+        reveal(fig);
       });
     });
 
@@ -1149,7 +1222,7 @@
     var section = $('[data-playbooks]');
     var grid = $('[data-products]');
     if (!section || !grid) return;
-    var products = (SITE.products || []).filter(function (p) { return p && p.title && isSafeUrl(p.checkoutUrl); });
+    var products = liveProducts();
     if (!products.length && !placeholders) return;
     if (products.length) {
       grid.innerHTML = products.map(function (p) {
@@ -1190,6 +1263,15 @@
     var status = $('[data-form-status]', form);
     var btn = $('[data-submit]', form);
     var provider = ((SITE.forms || {}).provider || 'none').toLowerCase();
+
+    var note = $('[data-online-note]', form);
+    if (note && appUrl()) {
+      $('[data-online-link]', note).href = appUrl();
+      var syncNote = function () { var r = $('input[name="format"]:checked', form); note.hidden = !(r && r.value === 'Online coaching'); refreshSoon(); };
+      $$('input[name="format"]', form).forEach(function (r) { r.addEventListener('change', syncNote); });
+      form.__syncNote = syncNote;
+      syncNote();
+    }
 
     if (SITE.bookingUrl && isSafeUrl(SITE.bookingUrl)) {
       var bd = $('[data-book-direct]'); bd.hidden = false; $('[data-booking-link]', bd).href = SITE.bookingUrl;
@@ -1304,8 +1386,27 @@
     if (fc) {
       if (SITE.contactEmail) fc.insertAdjacentHTML('beforeend', '<li><a href="mailto:' + esc(SITE.contactEmail) + '">' + esc(SITE.contactEmail) + '</a></li>');
       links.forEach(function (l) { fc.insertAdjacentHTML('beforeend', '<li><a href="' + esc(l[1]) + '" target="_blank" rel="noopener">' + esc(l[0]) + '</a></li>'); });
+      if (appUrl()) fc.insertAdjacentHTML('beforeend', '<li><a href="' + esc(appUrl()) + '" target="_blank" rel="noopener" data-track="cta_click" data-cta="footer_online_application">Online coaching application ↗</a></li>');
+      if (macroUrl()) fc.insertAdjacentHTML('beforeend', '<li><a href="' + esc(macroUrl()) + '" target="_blank" rel="noopener" data-track="cta_click" data-cta="footer_macro_calculator">Free macro calculator ↗</a></li>');
     }
+    $$('[data-macro-link]').forEach(function (a) { if (macroUrl()) { a.href = macroUrl(); a.hidden = false; } });
     $$('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
+  }
+
+  function initFaq() {
+    if (!motion) return;
+    $$('[data-faq] details').forEach(function (d) {
+      var sum = $('summary', d), ans = $('.ans', d);
+      sum.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (d.open) {
+          gsap.to(ans, { height: 0, duration: .6, ease: 'expo.inOut', onComplete: function () { d.open = false; ans.style.height = ''; refreshSoon(); } });
+        } else {
+          d.open = true;
+          gsap.fromTo(ans, { height: 0 }, { height: 'auto', duration: .8, ease: 'expo.out', onComplete: function () { ans.style.height = ''; refreshSoon(); } });
+        }
+      });
+    });
   }
 
   /* 14 · Boot ------------------------------------------------------------- */
@@ -1322,6 +1423,7 @@
     initOffers();
     initQuiz();
     initHeroQuick();
+    initFaq();
     initResults();
     initProducts();
     initAttribution();
