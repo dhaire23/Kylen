@@ -67,4 +67,16 @@ The mobile version is a centre crop — for the hero, export a dedicated vertica
 
 * The earlier Big Grit rendering: hero row photo (color, 1200×1800), playbook covers, client before/afters, Delone with a client, GRIT tank, lat pulldown and others.
 * Google Photos albums **"Club Studio/Absolute 8.16"** and **"10.11 Absolute Recomp"**: 15 selected shots, resized to 2000 px WebP (flash-cut stills, wide hero stills, founder chapters, coaching rows, Find Your Grit backdrop, jacket portrait, close-up).
-* The 8.16 album also holds **12 videos in 4K** (horizontal and vertical) — ideal for the `hero-0X` slots. Download them, then run `scripts/optimize-media.sh video …` to create the desktop/mobile files.
+* The 8.16 album's **12 4K videos** now drive every video slot, graded to a near-monochrome, high-contrast look so they match the photography:
+
+  | Slot | Desktop clip | Phone clip |
+  |---|---|---|
+  | Hero 01 | machine press | machine row (vertical) |
+  | Hero 02 | medicine-ball walking lunges | seated machine press (vertical) |
+  | Hero 03 | ski erg from behind | walk-in and flex (vertical) |
+  | "No shortcuts." band | slow close-up of a 45 lb plate | same, cropped 4:5 |
+  | Philosophy film | machine row, cropped 4:5 | — |
+  | Closing | close-up between sets | laughing close-up (vertical) |
+
+  Each clip is 7–9 s, 2–4 MB. To re-cut one with the same look:
+  `ffmpeg -ss START -t 7 -i clip.mp4 -an -c:v libx264 -crf 25 -pix_fmt yuv420p -movflags +faststart -vf "hue=s=0.12,eq=contrast=1.16:brightness=-0.035:gamma=0.94,scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080" media/hero/hero-01-desktop.mp4`

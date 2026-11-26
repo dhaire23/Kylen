@@ -16,7 +16,7 @@
 
 ## 🔴 Required before going public
 
-- [ ] **Hero footage** — cut 2–3 clips from the 4K videos in the "Club Studio/Absolute 8.16" album into `media/hero/hero-01…03` (the opening currently runs on stills, which already look complete)
+- [x] Video: three hero clips (desktop + vertical phone versions), the "No shortcuts" band, the philosophy film and the closing film, cut from the 4K Club Studio footage
 - [x] Real photography in every section (earlier rendering + Google Photos albums); `showPlaceholders` is already `false`
 - [ ] **Client photos** — confirm each client in the three before/afters agreed in writing to appear on the site
 - [ ] **Payhip** — make a real test purchase of each playbook and confirm the PDF arrives (the earlier version noted checkout was still being tested)
