@@ -96,9 +96,9 @@ window.BIG_GRIT_MEDIA = {
      portrait window, before the opening sequence takes over full screen. */
   heroIntro: {
     stills: [
-      { src: "media/hero/flash-abs-bw.webp", focus: "50% 30%", zoom: 1 },
-      { src: "media/hero/flash-back-bw.webp", focus: "50% 35%", zoom: 1 },
-      { src: "media/founder/delone-front-pose-bw.webp", focus: "50% 30%", zoom: 1 },
+      { src: "media/hero/flash-abs-bw-sm.webp", focus: "50% 30%", zoom: 1 },
+      { src: "media/hero/flash-back-bw-sm.webp", focus: "50% 35%", zoom: 1 },
+      { src: "media/hero/flash-front-pose-bw-sm.webp", focus: "50% 30%", zoom: 1 },
     ],
   },
 
@@ -193,7 +193,7 @@ window.BIG_GRIT_MEDIA = {
     },
     detail: {
       type: "video",
-      src: "media/details/detail-01.mp4",
+      src: "",   // add when ready: "media/details/detail-01.mp4"
       poster: "media/details/detail-01-poster.jpg",
       alt: "Slow-motion detail: chalked hands gripping a barbell",
       focus: "50% 45%",
@@ -229,7 +229,7 @@ window.BIG_GRIT_MEDIA = {
     chapters: [
       {
         type: "image",
-        src: "media/founder/chapter-01-the-field.jpg",
+        src: "",   // add when ready: "media/founder/chapter-01-the-field.jpg"
         alt: "Delone Carter during his football career",
         focus: "50% 40%",
         spec: "Syracuse / Colts-era photo · 1600×2000 JPG · confirm you hold usage rights (team and agency photos are usually licensed)",
@@ -260,7 +260,7 @@ window.BIG_GRIT_MEDIA = {
      into "src" (e.g. "https://www.youtube.com/watch?v=XXXX"). */
   interview: {
     type: "video",
-    src: "media/interview/founder-film.mp4",
+    src: "",   // add when ready: "media/interview/founder-film.mp4" or a YouTube link
     poster: "media/interview/founder-film-poster.jpg",
     title: "In his words",
     alt: "Founder film: Delone Carter on football, the hip replacement and rebuilding",
@@ -319,14 +319,35 @@ window.BIG_GRIT_MEDIA = {
      ------------------------------------------------------------------------ */
   clientFootage: {
     type: "video",
-    src: "media/clients/client-training-01.mp4",
+    src: "",   // add when ready: "media/clients/client-training-01.mp4"
     poster: "media/clients/client-training-01-poster.jpg",
     alt: "A Big Grit client training with Delone",
     focus: "50% 50%",
     spec: "Client training footage · 1600×2000 (4:5) MP4 · 6–10 s loop · under 5 MB · client permission required",
   },
 
-  /* Feature photo shown first in the results row */
+  /* Full-bleed interludes that give the page its rhythm */
+  interludes: {
+    photo: {
+      type: "image",
+      src: "media/founder/delone-closeup-bw.webp",
+      alt: "Close-up portrait of Delone Carter smiling, cap on backwards",
+      focus: "55% 32%",
+      fallback: "deloneRow",
+    },
+    video: {
+      type: "video",
+      src: "media/interludes/the-work-desktop.mp4",
+      srcMobile: "media/interludes/the-work-mobile.mp4",
+      poster: "media/interludes/the-work-poster.jpg",
+      alt: "Delone Carter doing walking lunges down the turf of an empty gym",
+      focus: "50% 50%",
+      fallback: "deloneLatPulldown",
+      spec: "Wide cinematic shot with negative space · 1920×1080 + 1080×1920 MP4 · 6–10 s loop · no audio",
+    },
+  },
+
+  /* Feature photo beside the results heading */
   resultFeature: {
     type: "image",
     src: "media/clients/delone-with-client.webp",
@@ -334,32 +355,36 @@ window.BIG_GRIT_MEDIA = {
     caption: "Delone with a client",
   },
 
-  /* Each transformation is EITHER
+  /* Each transformation becomes an editorial case study. Use EITHER
        image: one photo that already shows before and after
-              (add sideBySide: true to print "Before / After" labels on it)
+              (add sideBySide: true to print "Before / After" on it)
      OR
-       before + after: two separate photos of the same person (adds a drag slider)
-     Add as many as you like. Real clients with written permission only. */
+       before + after: two separate photos (adds a drag-to-compare slider).
+     Only fill in what is VERIFIED with the client — empty fields are hidden:
+       client     how they want to be named, e.g. "Marcus T." (or leave empty)
+       headline   one factual line, e.g. "Down two belt sizes in 12 weeks"
+       program    "Online coaching" / "Private training · DFW"
+       timeframe  e.g. "12 weeks" or "October – December 2020"
+       focus      e.g. "Fat loss" / "Recomposition"
+       quote      their words, exactly as they said them
+     Real clients with written permission only. See docs/CASE-STUDIES.md. */
   transformations: [
     {
       image: "media/transformations/client-01.webp",
       sideBySide: true,
       alt: "Client before and after, side by side, with a visibly smaller waist",
-      name: "",
-      caption: "",
+      client: "", headline: "", program: "", timeframe: "", focus: "", quote: "",
     },
     {
       image: "media/transformations/client-02.webp",
       sideBySide: true,
       alt: "Client before and after in profile, with a visibly flatter midsection",
-      name: "",
-      caption: "",
+      client: "", headline: "", program: "", timeframe: "", focus: "", quote: "",
     },
     {
       image: "media/transformations/client-03.webp",
       alt: "Client before and after: October 2020 and December 2020, noticeably leaner",
-      name: "",
-      caption: "October to December 2020",
+      client: "", headline: "", program: "", timeframe: "October – December 2020", focus: "", quote: "",
     },
   ],
 

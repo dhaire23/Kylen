@@ -27,17 +27,24 @@ Free tier: 100 submissions/month. If you outgrow it, upgrade or switch provider 
 
 ## 3 · Connect your domain
 
-1. Netlify: *Domain management → Add a domain* → enter your domain (e.g. `biggritperformance.com`).
-2. Either switch your domain's nameservers to Netlify (simplest) **or** at your registrar add:
+**Which domain?** The earlier materials link to **getgritfit.com**. As of 27 Nov 2026 that domain is pointed at **GoHighLevel** (GHL), and its pages return "404 Page Not Found". Decide with Delone:
+
+* **Option A — the new site goes on getgritfit.com (or another domain he owns).** Move the domain to Netlify (below). Old links such as `getgritfit.com/application` are already redirected to the new application by `netlify.toml`. If he still uses GHL funnels or booking pages, keep them on a subdomain (e.g. `go.getgritfit.com`) in GHL.
+* **Option B — a new domain** (e.g. `biggritperformance.com`): buy it, then connect it the same way.
+
+**Connecting it in Netlify:**
+1. *Domain management → Add a domain* → enter the domain.
+2. Where the domain's DNS is managed (the registrar, or GHL if it was bought through GHL), either switch the nameservers to Netlify's (simplest) **or** set:
    * `A` record `@` → `75.2.60.5`
    * `CNAME` record `www` → `your-site.netlify.app`
-   (Use the exact values Netlify shows you — they take priority over this note.)
+   (Use the exact values Netlify shows — they win over this note. Remove the old GHL records for the same names.)
 3. HTTPS is issued automatically within minutes to a few hours.
 4. Write the domain into the SEO/social tags, then redeploy:
    ```bash
    ./scripts/set-domain.sh yourdomain.com
    ```
-   (Or find-and-replace `YOUR-DOMAIN.com` in `index.html`, `robots.txt`, `sitemap.xml`.)
+
+**Sending leads into GoHighLevel (optional):** in GHL create an *Inbound Webhook* trigger, copy its URL, then in `config/site.config.js` set `provider: "webhook"` and `webhookUrl: "<that URL>"`. Every application (with assessment answers, lead priority and source) then lands in GHL. Test once after deploying.
 
 ## 4 · Booking, email, analytics
 

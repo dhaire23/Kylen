@@ -29,8 +29,11 @@ window.BIG_GRIT_SITE = {
    *   "Apply for online coaching" buttons go straight to it.
    * macroCalculatorUrl: free macro calculator, offered as a free tool.
    * --------------------------------------------------------------------- */
-  onlineApplicationUrl: "https://www.getgritfit.com/application",
-  macroCalculatorUrl: "https://www.getgritfit.com/macro-calculator",
+  // getgritfit.com (GoHighLevel) returned "404 Page Not Found" on 27 Nov 2026,
+  // so these are switched off: online coaching uses this site's own application
+  // form instead. Paste the links back in once those pages are live again.
+  onlineApplicationUrl: "",   // was "https://www.getgritfit.com/application"
+  macroCalculatorUrl: "",     // was "https://www.getgritfit.com/macro-calculator"
 
   /* ---------- Application form ----------------------------------------- *
    * provider:
@@ -61,7 +64,7 @@ window.BIG_GRIT_SITE = {
    * "In-person packages from $X. Online coaching from $Y / month."
    * Leave "" to show nothing.
    * --------------------------------------------------------------------- */
-  pricingNote: "Online coaching: Delone's application asks whether you're ready to invest $1,500 to $5,000. Private training rates are confirmed with Delone directly.",
+  pricingNote: "Online coaching: Delone works with clients ready to invest $1,500 to $5,000. Private training rates are confirmed with Delone directly.",
 
   /* ---------- Analytics & conversion tracking ------------------------- *
    * Leave "" to disable. Scripts only load when an ID is present.

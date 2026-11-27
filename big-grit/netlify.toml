@@ -47,3 +47,13 @@
   to = "/404.html"
   status = 404
   force = true
+
+# Old GritFit links (Instagram bio, past posts) land on the new site
+[[redirects]]
+  from = "/application"
+  to = "/#apply"
+  status = 301
+[[redirects]]
+  from = "/macro-calculator"
+  to = "/#find-your-grit"
+  status = 302
