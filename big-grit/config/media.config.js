@@ -275,6 +275,7 @@ window.BIG_GRIT_MEDIA = {
      credit: who uploaded it — shown under the chapter
      poster: photo shown until play (YouTube clips use their own thumbnail) */
   careerReel: {
+    playIn: "page",   // "page" = play inside the site · "newtab" = open on YouTube/Instagram
     chapters: [
       { era: "High school", title: "Where it started", url: "https://youtu.be/GwFntQnWeEQ", start: 0, credit: "Video: anthonyqb2 on YouTube", poster: "media/founder/delone-row-bw.webp" },
       { era: "Syracuse", title: "Big East Offensive Player of the Week", url: "https://youtu.be/UYWrfTqKgcQ", start: 0, credit: "Video: Scotsman Media Group on YouTube", poster: "media/founder/delone-row-bw.webp" },

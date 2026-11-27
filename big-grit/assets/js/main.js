@@ -859,6 +859,13 @@
       if (y) return 'https://www.youtube-nocookie.com/embed/' + y + '?autoplay=1&rel=0&modestbranding=1&playsinline=1' + (c.start ? '&start=' + parseInt(c.start, 10) : '');
       return 'https://www.instagram.com/reel/' + igId(c.url) + '/embed/';
     }
+    function watchUrl(c) {
+      var y = ytId(c.url);
+      if (y) return 'https://www.youtube.com/watch?v=' + y + (c.start ? '&t=' + parseInt(c.start, 10) + 's' : '');
+      return 'https://www.instagram.com/reel/' + igId(c.url) + '/';
+    }
+    // playIn: "page" plays inside the site (default); "newtab" opens YouTube/Instagram instead.
+    var inPage = cfg.playIn !== 'newtab';
     function posterUrl(c) { var y = ytId(c.url); return y ? 'https://i.ytimg.com/vi/' + y + '/hqdefault.jpg' : (c.poster || (LIB.deloneRow && LIB.deloneRow.src)); }
 
     function show(i, play) {
@@ -869,21 +876,26 @@
       now.textContent = pad(i + 1) + ' / ' + pad(ch.length) + ' · ' + c.era;
       var nx = ch[(i + 1) % ch.length];
       $('span', next).textContent = i + 1 < ch.length ? 'Next: ' + nx.era : 'Back to the start';
-      if (play) {
+      var out = $('[data-reel-out]', box);
+      if (out) { out.href = watchUrl(c); out.textContent = (ytId(c.url) ? 'Watch on YouTube' : 'Open on Instagram') + ' ↗'; }
+      if (play && inPage) {
         player.innerHTML = '<iframe src="' + esc(embedUrl(c)) + '" title="' + esc(c.era + ': ' + (c.title || 'career highlight')) + '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>';
         track('reel_play', { chapter: c.era });
         return;
       }
       player.innerHTML = '<img src="' + esc(posterUrl(c)) + '" alt="" loading="lazy" decoding="async">' +
-        '<button type="button" class="film-play" aria-label="Play ' + esc(c.era) + ' highlights"><span>Play</span></button>' +
+        (inPage ? '<button type="button" class="film-play" aria-label="Play ' + esc(c.era) + ' highlights"><span>Play</span></button>'
+                : '<a class="film-play" href="' + esc(watchUrl(c)) + '" target="_blank" rel="noopener" aria-label="Watch ' + esc(c.era) + ' highlights (opens in a new tab)"><span>Play ↗</span></a>') +
         '<div class="reel-cap"><span>' + pad(i + 1) + ' · ' + esc(c.era) + '</span><b>' + esc(c.title || '') + '</b></div>';
       var img = $('img', player);
       img.addEventListener('error', function () { if (c.poster && img.getAttribute('src') !== c.poster) img.src = c.poster; }, { once: true });
-      $('.film-play', player).addEventListener('click', function () { show(i, true); });
+      var pb = $('.film-play', player);
+      if (inPage) pb.addEventListener('click', function () { show(i, true); });
+      else pb.addEventListener('click', function () { track('reel_play', { chapter: c.era, mode: 'newtab' }); });
     }
 
-    list.addEventListener('click', function (e) { var b = e.target.closest('.reel-item'); if (b) show(Number(b.getAttribute('data-i')), true); });
-    next.addEventListener('click', function () { show((cur + 1) % ch.length, true); });
+    list.addEventListener('click', function (e) { var b = e.target.closest('.reel-item'); if (b) show(Number(b.getAttribute('data-i')), inPage); });
+    next.addEventListener('click', function () { show((cur + 1) % ch.length, inPage); });
     show(0, false);
 
     // The hero's film shortcut points at the tape.

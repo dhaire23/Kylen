@@ -504,6 +504,9 @@ html.motion .marquee-track { animation: none; }
 .reel-cap b { font-stretch: 70%; font-weight: 760; font-size: clamp(1.3rem, 2.4vw, 2.2rem); text-transform: uppercase; line-height: 1; }
 .reel-ctrl { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 14px; }
 .reel-now { font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--mute); font-variant-numeric: tabular-nums; }
+.reel-out { margin-left: auto; font-size: 12px; color: var(--mute); text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+.reel-out:hover { color: var(--bone); }
+a.film-play { text-decoration: none; }
 .reel-next { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--grit); }
 .reel-next .arrow { transition: transform .45s var(--ease); }
 .reel-next:hover .arrow { transform: translateX(5px); }
@@ -868,7 +871,8 @@ html.motion .statement .w { opacity: .14; }
   .reel-cap span { display: none; }
   .reel-cap b { font-size: 1.1rem; }
   .reel-now { display: none; }
-  .reel-ctrl { justify-content: flex-end; }
+  .reel-ctrl { justify-content: space-between; }
+  .reel-out { margin-left: 0; }
   .reel-next { white-space: nowrap; }
   .tcard--wide { width: 86vw; }
   .apply-media { display: none; }
