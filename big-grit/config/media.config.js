@@ -268,19 +268,22 @@ window.BIG_GRIT_MEDIA = {
     spec: "Founder interview · 1920×1080 MP4 (H.264 + AAC audio) · 60–180 s · under 40 MB — or a YouTube/Vimeo link",
   },
 
-  /* Career reel ("The Tape") in Meet Delone — plays each clip in order through
-     YouTube's / Instagram's own player (nothing is downloaded or re-hosted).
-     url:    a YouTube or Instagram reel link
-     start:  optional second to start a YouTube clip at (e.g. 42)
-     credit: who uploaded it — shown under the chapter
-     poster: photo shown until play (YouTube clips use their own thumbnail) */
+  /* Career reel ("The Tape") in Meet Delone — an auto-playing highlight reel.
+     It starts muted when scrolled into view and moves through the chapters
+     on its own (sound and pause buttons on the player).
+     YouTube chapters play through YouTube's own player — nothing is
+     downloaded or re-hosted. Set the best moment of each with:
+       start: second to begin at      end: second to stop at
+     (no "end" = start + clipSeconds). Chapters with "video" play a file
+     from /media instead. "link" adds a "watch the full thing" link. */
   careerReel: {
-    playIn: "page",   // "page" = play inside the site · "newtab" = open on YouTube/Instagram
+    clipSeconds: 20,
     chapters: [
-      { era: "High school", title: "Where it started", url: "https://youtu.be/GwFntQnWeEQ", start: 0, credit: "Video: anthonyqb2 on YouTube", poster: "media/founder/delone-row-bw.webp" },
-      { era: "Syracuse", title: "Big East Offensive Player of the Week", url: "https://youtu.be/UYWrfTqKgcQ", start: 0, credit: "Video: Scotsman Media Group on YouTube", poster: "media/founder/delone-row-bw.webp" },
-      { era: "Indianapolis Colts", title: "Touchdown vs. Titans · 12/9/12", url: "https://youtu.be/ZY6SEeFyY_o", start: 0, credit: "Video: K Michael McCammack on YouTube", poster: "media/founder/delone-row-bw.webp" },
-      { era: "IFBB Pro", title: "The rebuild, on stage", url: "https://www.instagram.com/reel/DJwmR0Ht1u4/", credit: "Video: Instagram", poster: "media/founder/delone-front-pose-bw.webp" },
+      { era: "High school", title: "Where it started", url: "https://youtu.be/GwFntQnWeEQ", start: 0, credit: "Video: anthonyqb2 on YouTube" },
+      { era: "Syracuse", title: "Big East Offensive Player of the Week", url: "https://youtu.be/UYWrfTqKgcQ", start: 0, credit: "Video: Scotsman Media Group on YouTube" },
+      { era: "Indianapolis Colts", title: "Touchdown vs. Titans · 12/9/12", url: "https://youtu.be/ZY6SEeFyY_o", start: 0, credit: "Video: K Michael McCammack on YouTube" },
+      { era: "IFBB Pro", title: "Still building", video: "media/reel/today.mp4", poster: "media/reel/today-poster.jpg", credit: "Club Studio footage",
+        link: "https://www.instagram.com/reel/DJwmR0Ht1u4/", linkLabel: "Watch the stage reel on Instagram" },
     ],
   },
 

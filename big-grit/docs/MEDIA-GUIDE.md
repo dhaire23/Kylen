@@ -38,16 +38,18 @@ The site checks which files exist when it loads. Missing files are skipped; pres
 
 ## The Tape — Delone's career reel
 
-In **Meet Delone**, "The Tape" plays his career in order: High school → Syracuse → Indianapolis Colts → IFBB Pro. Each chapter plays through YouTube's or Instagram's own player, so nothing is downloaded or re-hosted. That keeps the site clear of copyright claims on game broadcasts.
+In **Meet Delone**, "The Tape" is an auto-playing highlight reel: when a visitor scrolls to it, it starts (muted, like Instagram) and runs High school → Syracuse → Indianapolis Colts → IFBB Pro by itself, then loops. Story-style progress bars sit across the top, with sound and pause buttons on the player; tapping a chapter jumps to it.
 
-Edit it in `config/media.config.js` → `careerReel.chapters`:
+* Football chapters play a **window** of each YouTube video through YouTube's own player — nothing is downloaded or re-hosted, which keeps the site clear of copyright claims on game broadcasts.
+* The IFBB Pro chapter plays `media/reel/today.mp4` (a 12-second graded montage of Delone's own Club Studio footage), with a link to the Instagram stage reel underneath.
+* If YouTube's player can't load, those chapters show a "Watch on YouTube" button and the reel plays Delone's own footage.
 
-* `url` — any YouTube link (`youtu.be/…` or `youtube.com/watch?v=…`) or Instagram reel link
-* `start` — second to begin a YouTube clip at, to open on the best play (e.g. `start: 42`)
-* `era`, `title` — the chapter name and line underneath
-* `credit` — who uploaded the clip (keep this — it credits the source)
+Edit it in `config/media.config.js` → `careerReel`:
 
-Add, remove or reorder chapters freely. If Delone gets his own cut of the highlights (or footage he owns), upload it to his YouTube channel and swap the links in.
+* `start` / `end` — the seconds of each YouTube video to play (e.g. `start: 42, end: 58`). Without `end`, each plays `clipSeconds` (20) from `start`. **Set these to each video's best play.**
+* `url` — any YouTube link; `video` — a file in `/media` instead
+* `era`, `title`, `credit` — the chapter labels (keep the credit to the uploader)
+* `link` + `linkLabel` — an extra "watch the full thing" link for that chapter
 
 ## Compressing footage (recommended)
 

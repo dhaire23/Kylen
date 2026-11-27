@@ -832,7 +832,12 @@
     imgs.forEach(function (im) { im.style.transition = reduceMotion ? 'none' : 'clip-path 1.1s cubic-bezier(.76,0,.24,1)'; });
   }
 
-  /* Career reel — official YouTube / Instagram players, loaded only on play */
+  /* Career reel — auto-playing highlight reel ------------------------------
+     YouTube chapters play a set window (start → end) through YouTube's own
+     player via its IFrame API; local chapters play files from /media. Starts
+     muted when scrolled into view, advances on its own, loops. If YouTube's
+     player cannot load (blocked network, embedding disabled), those chapters
+     become "Watch on YouTube" links and the reel plays what it can. */
   function ytId(u) { var m = /(?:youtu\.be\/|[?&]v=|embed\/|shorts\/)([\w-]{6,})/.exec(u || ''); return m ? m[1] : null; }
   function igId(u) { var m = /instagram\.com\/(?:reel|reels|p)\/([\w-]+)/.exec(u || ''); return m ? m[1] : null; }
 
@@ -840,63 +845,207 @@
     var cfg = MEDIA.careerReel;
     var box = $('[data-reel]');
     if (!box || !cfg || !cfg.chapters) return;
-    var ch = cfg.chapters.filter(function (c) { return c && (ytId(c.url) || igId(c.url)); });
+    var ch = cfg.chapters.filter(function (c) { return c && (c.video || ytId(c.url)); });
     if (!ch.length) return;
     box.hidden = false;
-    var player = $('[data-reel-player]', box), list = $('[data-reel-list]', box);
-    var now = $('[data-reel-now]', box), next = $('[data-reel-next]', box);
-    var cur = 0;
-    var pad = function (n) { return String(n).padStart(2, '0'); };
 
+    var player = $('[data-reel-player]', box), list = $('[data-reel-list]', box), segs = $('[data-reel-segs]', box);
+    var now = $('[data-reel-now]', box), next = $('[data-reel-next]', box), out = $('[data-reel-out]', box);
+    var poster = $('[data-reel-poster]', box), vid = $('[data-reel-vid]', box), link = $('[data-reel-link]', box);
+    var soundBtn = $('[data-reel-sound]', box), pauseBtn = $('[data-reel-pause]', box), shield = $('[data-reel-shield]', box);
+    var clipLen = Number(cfg.clipSeconds) || 20;
+    var pad = function (n) { return String(n).padStart(2, '0'); };
+    var isYT = function (c) { return !c.video && !!ytId(c.url); };
+    var hasYT = ch.some(isYT);
+
+    var st = { cur: -1, started: false, userPaused: false, inView: false, muted: true, yt: null, ytReady: false, ytDead: !hasYT, failed: {}, dur: clipLen, raf: 0, loading: false };
+
+    segs.innerHTML = ch.map(function () { return '<span class="reel-seg"><i></i></span>'; }).join('');
     list.innerHTML = ch.map(function (c, i) {
-      return '<li><button type="button" class="reel-item" data-i="' + i + '" aria-pressed="' + (i === 0) + '">' +
+      return '<li><button type="button" class="reel-item" data-i="' + i + '" aria-pressed="false">' +
         '<span class="reel-n">' + pad(i + 1) + '</span><span class="reel-body"><span class="reel-era">' + esc(c.era) + '</span>' +
         '<span class="reel-t">' + esc(c.title || '') + '</span><span class="reel-credit">' + esc(c.credit || '') + '</span></span></button></li>';
     }).join('');
 
-    function embedUrl(c) {
-      var y = ytId(c.url);
-      if (y) return 'https://www.youtube-nocookie.com/embed/' + y + '?autoplay=1&rel=0&modestbranding=1&playsinline=1' + (c.start ? '&start=' + parseInt(c.start, 10) : '');
-      return 'https://www.instagram.com/reel/' + igId(c.url) + '/embed/';
-    }
-    function watchUrl(c) {
-      var y = ytId(c.url);
-      if (y) return 'https://www.youtube.com/watch?v=' + y + (c.start ? '&t=' + parseInt(c.start, 10) + 's' : '');
-      return 'https://www.instagram.com/reel/' + igId(c.url) + '/';
-    }
-    // playIn: "page" plays inside the site (default); "newtab" opens YouTube/Instagram instead.
-    var inPage = cfg.playIn !== 'newtab';
-    function posterUrl(c) { var y = ytId(c.url); return y ? 'https://i.ytimg.com/vi/' + y + '/hqdefault.jpg' : (c.poster || (LIB.deloneRow && LIB.deloneRow.src)); }
+    function win(c) { var s0 = Number(c.start) || 0; var e = Number(c.end) || (s0 + clipLen); return { start: s0, end: e }; }
+    function watchUrl(c) { var y = ytId(c.url); return y ? 'https://www.youtube.com/watch?v=' + y + (c.start ? '&t=' + parseInt(c.start, 10) + 's' : '') : (c.link || c.url || ''); }
+    function posterOf(c) { var y = ytId(c.url); return c.poster || (y ? 'https://i.ytimg.com/vi/' + y + '/hqdefault.jpg' : (LIB.deloneRow && LIB.deloneRow.src)); }
+    function playable(i) { return isYT(ch[i]) ? (st.ytReady && !st.failed[i]) : true; }
+    function nextFrom(i) { for (var k = 1; k <= ch.length; k++) { var j = (i + k) % ch.length; if (playable(j)) return j; } return -1; }
 
-    function show(i, play) {
-      cur = i;
+    function paintChrome(i) {
       var c = ch[i];
       $$('.reel-item', list).forEach(function (b, j) { b.setAttribute('aria-pressed', String(j === i)); });
-      player.classList.toggle('is-vertical', !!(play && igId(c.url)));
+      $$('.reel-seg', segs).forEach(function (sg, j) { sg.classList.toggle('is-done', j < i); sg.classList.toggle('is-on', j === i); $('i', sg).style.transform = 'scaleX(' + (j < i ? 1 : 0) + ')'; });
+      $('[data-reel-cap-era]', box).textContent = pad(i + 1) + ' · ' + c.era;
+      $('[data-reel-cap-title]', box).textContent = c.title || '';
       now.textContent = pad(i + 1) + ' / ' + pad(ch.length) + ' · ' + c.era;
       var nx = ch[(i + 1) % ch.length];
       $('span', next).textContent = i + 1 < ch.length ? 'Next: ' + nx.era : 'Back to the start';
-      var out = $('[data-reel-out]', box);
-      if (out) { out.href = watchUrl(c); out.textContent = (ytId(c.url) ? 'Watch on YouTube' : 'Open on Instagram') + ' ↗'; }
-      if (play && inPage) {
-        player.innerHTML = '<iframe src="' + esc(embedUrl(c)) + '" title="' + esc(c.era + ': ' + (c.title || 'career highlight')) + '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>';
-        track('reel_play', { chapter: c.era });
-        return;
-      }
-      player.innerHTML = '<img src="' + esc(posterUrl(c)) + '" alt="" loading="lazy" decoding="async">' +
-        (inPage ? '<button type="button" class="film-play" aria-label="Play ' + esc(c.era) + ' highlights"><span>Play</span></button>'
-                : '<a class="film-play" href="' + esc(watchUrl(c)) + '" target="_blank" rel="noopener" aria-label="Watch ' + esc(c.era) + ' highlights (opens in a new tab)"><span>Play ↗</span></a>') +
-        '<div class="reel-cap"><span>' + pad(i + 1) + ' · ' + esc(c.era) + '</span><b>' + esc(c.title || '') + '</b></div>';
-      var img = $('img', player);
-      img.addEventListener('error', function () { if (c.poster && img.getAttribute('src') !== c.poster) img.src = c.poster; }, { once: true });
-      var pb = $('.film-play', player);
-      if (inPage) pb.addEventListener('click', function () { show(i, true); });
-      else pb.addEventListener('click', function () { track('reel_play', { chapter: c.era, mode: 'newtab' }); });
+      var href = isYT(c) ? watchUrl(c) : c.link;
+      out.hidden = !href;
+      if (href) { out.href = href; out.textContent = (isYT(c) ? 'Watch full video on YouTube' : (c.linkLabel || 'Watch more')) + ' ↗'; }
     }
 
-    list.addEventListener('click', function (e) { var b = e.target.closest('.reel-item'); if (b) show(Number(b.getAttribute('data-i')), inPage); });
-    next.addEventListener('click', function () { show((cur + 1) % ch.length, inPage); });
-    show(0, false);
+    function stopAll() {
+      if (st.yt && st.ytReady) { try { st.yt.pauseVideo(); } catch (e) { /* player gone */ } }
+      vid.pause();
+    }
+
+    // A chapter that cannot play here: show its poster with a link out.
+    function showLinkOnly(i) {
+      st.cur = i; stopAll(); cancelAnimationFrame(st.raf);
+      paintChrome(i);
+      player.classList.add('is-poster'); player.classList.remove('is-yt', 'is-vid');
+      poster.src = posterOf(ch[i]);
+      link.href = watchUrl(ch[i]); link.hidden = false;
+      $('span', link).textContent = (isYT(ch[i]) ? 'Watch on YouTube' : 'Watch') + ' ↗';
+    }
+
+    function go(i, user) {
+      if (i < 0) return;
+      if (!playable(i)) { showLinkOnly(i); return; }
+      var c = ch[i];
+      st.cur = i; st.started = true; link.hidden = true;
+      if (user) { st.userPaused = false; track('reel_play', { chapter: c.era }); }
+      paintChrome(i);
+      poster.src = posterOf(c);
+      if (isYT(c)) {
+        vid.pause(); vid.hidden = true;
+        var w = win(c); st.dur = Math.max(2, w.end - w.start);
+        player.classList.add('is-yt', 'is-poster'); player.classList.remove('is-vid');
+        st.loading = true;
+        st.yt.loadVideoById({ videoId: ytId(c.url), startSeconds: w.start, endSeconds: w.end });
+        if (st.muted) st.yt.mute(); else st.yt.unMute();
+      } else {
+        if (st.yt && st.ytReady) { try { st.yt.pauseVideo(); } catch (e) { /* noop */ } }
+        player.classList.add('is-vid'); player.classList.remove('is-yt');
+        vid.hidden = false;
+        if (vid.getAttribute('src') !== c.video) { vid.src = c.video; if (c.poster) vid.poster = c.poster; }
+        try { vid.currentTime = 0; } catch (e) { /* not ready */ }
+        vid.muted = st.muted;
+        st.dur = Number(c.seconds) || 0;
+        var p = vid.play();
+        if (p && p.catch) p.catch(function () { player.classList.add('is-poster'); });
+        player.classList.remove('is-poster');
+      }
+      syncPause();
+      tick();
+    }
+
+    function advance() { var j = nextFrom(st.cur); if (j >= 0) go(j, false); }
+
+    function elapsed() {
+      var c = ch[st.cur];
+      if (!c) return 0;
+      if (isYT(c)) { try { return Math.max(0, st.yt.getCurrentTime() - win(c).start); } catch (e) { return 0; } }
+      if (!st.dur && vid.duration) st.dur = vid.duration;
+      return vid.currentTime;
+    }
+
+    function tick() {
+      cancelAnimationFrame(st.raf);
+      var loop = function () {
+        var c = ch[st.cur];
+        if (!c) return;
+        var e = elapsed(), d = st.dur || 1;
+        var bar = $$('.reel-seg i', segs)[st.cur];
+        if (bar) bar.style.transform = 'scaleX(' + Math.min(1, e / d) + ')';
+        if (!st.userPaused && st.inView && e >= d - 0.12 && !isYT(c)) { advance(); return; }
+        st.raf = requestAnimationFrame(loop);
+      };
+      st.raf = requestAnimationFrame(loop);
+    }
+
+    function syncPause() {
+      var run = !st.userPaused && st.inView && !document.hidden;
+      var c = ch[st.cur];
+      if (c) {
+        if (isYT(c) && st.ytReady) { try { if (run) st.yt.playVideo(); else st.yt.pauseVideo(); } catch (e) { /* noop */ } }
+        if (!isYT(c)) { if (run) { var p = vid.play(); if (p && p.catch) p.catch(function () {}); } else vid.pause(); }
+      }
+      pauseBtn.setAttribute('aria-pressed', String(st.userPaused));
+      pauseBtn.setAttribute('aria-label', st.userPaused ? 'Play the reel' : 'Pause the reel');
+      shield.setAttribute('aria-label', st.userPaused ? 'Play the reel' : 'Pause the reel');
+    }
+
+    function begin() {
+      if (st.started || !st.inView || saveData) return;
+      if (hasYT && !st.ytReady && !st.ytDead) return; // wait for YouTube's player (or its timeout)
+      var first = playable(0) ? 0 : nextFrom(-1 + ch.length) ;
+      if (first < 0) { showLinkOnly(0); return; }
+      track('reel_autoplay', { chapter: ch[first].era });
+      go(first, false);
+    }
+
+    // Controls
+    list.addEventListener('click', function (e) { var b = e.target.closest('.reel-item'); if (b) go(Number(b.getAttribute('data-i')), true); });
+    next.addEventListener('click', function () { var j = (st.cur + 1) % ch.length; go(playable(j) ? j : j, true); });
+    segs.addEventListener('click', function (e) { var sg = e.target.closest('.reel-seg'); if (sg) go($$('.reel-seg', segs).indexOf(sg), true); });
+    var togglePause = function () {
+      if (!st.started) { st.userPaused = false; go(playable(0) ? 0 : Math.max(0, nextFrom(ch.length - 1)), true); return; }
+      st.userPaused = !st.userPaused; syncPause();
+    };
+    pauseBtn.addEventListener('click', togglePause);
+    shield.addEventListener('click', togglePause);
+    soundBtn.addEventListener('click', function () {
+      st.muted = !st.muted;
+      soundBtn.setAttribute('aria-pressed', String(!st.muted));
+      soundBtn.setAttribute('aria-label', st.muted ? 'Turn sound on' : 'Turn sound off');
+      vid.muted = st.muted;
+      if (st.yt && st.ytReady) { try { if (st.muted) st.yt.mute(); else st.yt.unMute(); } catch (e) { /* noop */ } }
+      if (!st.muted) track('reel_sound_on', { chapter: (ch[st.cur] || {}).era });
+      if (!st.started) togglePause();
+    });
+    vid.addEventListener('ended', function () { if (!ch[st.cur] || isYT(ch[st.cur])) return; if (st.inView && !st.userPaused) advance(); });
+    vid.addEventListener('error', function () { var i = st.cur; if (ch[i] && !isYT(ch[i])) { st.failed[i] = true; showLinkOnly(i); } });
+
+    // Play only while on screen
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (en) {
+        st.inView = en[0].isIntersecting;
+        if (st.inView && !st.started) begin(); else syncPause();
+      }, { threshold: 0.35 }).observe(player);
+    } else { st.inView = true; }
+    document.addEventListener('visibilitychange', syncPause);
+
+    // Initial state: first chapter's poster
+    paintChrome(0);
+    poster.src = posterOf(ch[0]);
+    player.classList.add('is-poster');
+    poster.addEventListener('error', function () { var f = ch[st.cur < 0 ? 0 : st.cur].poster || (LIB.deloneRow && LIB.deloneRow.src); if (f && poster.getAttribute('src') !== f) poster.src = f; });
+
+    // YouTube's player (only if there are YouTube chapters)
+    if (hasYT) {
+      var giveUp = setTimeout(function () { if (!st.ytReady) { st.ytDead = true; begin(); } }, 6000);
+      var prev = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = function () {
+        if (typeof prev === 'function') prev();
+        var firstYT = ch.filter(isYT)[0];
+        try {
+          st.yt = new window.YT.Player('reel-yt', {
+            host: 'https://www.youtube-nocookie.com',
+            videoId: ytId(firstYT.url),
+            playerVars: { autoplay: 0, mute: 1, controls: 0, playsinline: 1, rel: 0, modestbranding: 1, iv_load_policy: 3, disablekb: 1, fs: 0, origin: location.origin },
+            events: {
+              onReady: function () { clearTimeout(giveUp); st.ytReady = true; st.ytDead = false; try { st.yt.mute(); } catch (e) { /* noop */ } begin(); },
+              onStateChange: function (e) {
+                var c = ch[st.cur];
+                if (!c || !isYT(c)) return;
+                if (e.data === 1) { st.loading = false; player.classList.remove('is-poster'); if (st.userPaused || !st.inView) syncPause(); }
+                if (e.data === 0 && st.inView && !st.userPaused) advance();
+              },
+              onError: function () { var i = st.cur; st.failed[i] = true; if (st.inView && !st.userPaused) advance(); else showLinkOnly(i); }
+            }
+          });
+        } catch (e) { st.ytDead = true; begin(); }
+      };
+      var tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      tag.async = true;
+      tag.onerror = function () { clearTimeout(giveUp); st.ytDead = true; begin(); };
+      document.head.appendChild(tag);
+    }
 
     // The hero's film shortcut points at the tape.
     var heroFilm = $('[data-hero-film]');

@@ -319,10 +319,28 @@
       </header>
       <div class="reel-grid">
         <div>
-          <div class="reel-player" data-reel-player></div>
+          <div class="reel-player" data-reel-player>
+            <div class="reel-stage" aria-hidden="true">
+              <img class="reel-poster" data-reel-poster alt="" decoding="async">
+              <div class="reel-yt"><div id="reel-yt"></div></div>
+              <video class="reel-vid" data-reel-vid muted playsinline webkit-playsinline preload="none" disablepictureinpicture hidden></video>
+            </div>
+            <button class="reel-shield" type="button" data-reel-shield aria-label="Pause the reel"></button>
+            <div class="reel-segs" data-reel-segs aria-hidden="true"></div>
+            <div class="reel-cap" aria-hidden="true"><span data-reel-cap-era></span><b data-reel-cap-title></b></div>
+            <a class="reel-link" data-reel-link href="#" target="_blank" rel="noopener" hidden><span>Watch on YouTube ↗</span></a>
+            <div class="reel-btns">
+              <button class="reel-btn" type="button" data-reel-sound aria-pressed="false" aria-label="Turn sound on">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path class="s-off" d="M16 9l5 6M21 9l-5 6" fill="none" stroke="currentColor" stroke-width="1.8"/><path class="s-on" d="M16 8.5a5 5 0 010 7M18.5 6a8.5 8.5 0 010 12" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+              </button>
+              <button class="reel-btn" type="button" data-reel-pause aria-pressed="false" aria-label="Pause the reel">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-pause" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/><path class="i-play" d="M7 4.5v15l12-7.5z"/></svg>
+              </button>
+            </div>
+          </div>
           <div class="reel-ctrl">
             <span class="reel-now" data-reel-now aria-live="polite"></span>
-            <a class="reel-out" href="#" data-reel-out target="_blank" rel="noopener" data-track="cta_click" data-cta="reel_watch_external">Watch on YouTube ↗</a>
+            <a class="reel-out" href="#" data-reel-out target="_blank" rel="noopener" data-track="cta_click" data-cta="reel_watch_external" hidden></a>
             <button class="reel-next" type="button" data-reel-next><span>Next chapter</span><i class="arrow" aria-hidden="true"></i></button>
           </div>
         </div>
