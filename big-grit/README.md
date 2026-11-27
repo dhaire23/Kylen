@@ -30,6 +30,8 @@ big-grit/
 
 | I want to… | Read |
 |---|---|
+| Start here (for Delone) | [`START-HERE.md`](START-HERE.md) |
+|---|---|
 | Swap photos and videos | [`docs/MEDIA-GUIDE.md`](docs/MEDIA-GUIDE.md) |
 | Put the site online and connect the domain | [`docs/DEPLOY.md`](docs/DEPLOY.md) |
 | Know what's left before launch | [`docs/LAUNCH-CHECKLIST.md`](docs/LAUNCH-CHECKLIST.md) |
