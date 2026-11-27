@@ -36,6 +36,19 @@ The site checks which files exist when it loads. Missing files are skipped; pres
 | Closing film | `closing` | `media/closing/closing-desktop.mp4` + `-mobile.mp4` | 8–12 s loop, no audio, < 8 MB |
 | Social share image | — | `media/og/big-grit-og.jpg` | 1200×630 (already made from the authentic photo) |
 
+## The Tape — Delone's career reel
+
+In **Meet Delone**, "The Tape" plays his career in order: High school → Syracuse → Indianapolis Colts → IFBB Pro. Each chapter plays through YouTube's or Instagram's own player, so nothing is downloaded or re-hosted. That keeps the site clear of copyright claims on game broadcasts.
+
+Edit it in `config/media.config.js` → `careerReel.chapters`:
+
+* `url` — any YouTube link (`youtu.be/…` or `youtube.com/watch?v=…`) or Instagram reel link
+* `start` — second to begin a YouTube clip at, to open on the best play (e.g. `start: 42`)
+* `era`, `title` — the chapter name and line underneath
+* `credit` — who uploaded the clip (keep this — it credits the source)
+
+Add, remove or reorder chapters freely. If Delone gets his own cut of the highlights (or footage he owns), upload it to his YouTube channel and swap the links in.
+
 ## Compressing footage (recommended)
 
 Install ffmpeg once (`brew install ffmpeg` on Mac), then from the site folder:

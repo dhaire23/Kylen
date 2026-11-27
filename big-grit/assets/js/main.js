@@ -832,6 +832,71 @@
     imgs.forEach(function (im) { im.style.transition = reduceMotion ? 'none' : 'clip-path 1.1s cubic-bezier(.76,0,.24,1)'; });
   }
 
+  /* Career reel — official YouTube / Instagram players, loaded only on play */
+  function ytId(u) { var m = /(?:youtu\.be\/|[?&]v=|embed\/|shorts\/)([\w-]{6,})/.exec(u || ''); return m ? m[1] : null; }
+  function igId(u) { var m = /instagram\.com\/(?:reel|reels|p)\/([\w-]+)/.exec(u || ''); return m ? m[1] : null; }
+
+  function initReel() {
+    var cfg = MEDIA.careerReel;
+    var box = $('[data-reel]');
+    if (!box || !cfg || !cfg.chapters) return;
+    var ch = cfg.chapters.filter(function (c) { return c && (ytId(c.url) || igId(c.url)); });
+    if (!ch.length) return;
+    box.hidden = false;
+    var player = $('[data-reel-player]', box), list = $('[data-reel-list]', box);
+    var now = $('[data-reel-now]', box), next = $('[data-reel-next]', box);
+    var cur = 0;
+    var pad = function (n) { return String(n).padStart(2, '0'); };
+
+    list.innerHTML = ch.map(function (c, i) {
+      return '<li><button type="button" class="reel-item" data-i="' + i + '" aria-pressed="' + (i === 0) + '">' +
+        '<span class="reel-n">' + pad(i + 1) + '</span><span class="reel-body"><span class="reel-era">' + esc(c.era) + '</span>' +
+        '<span class="reel-t">' + esc(c.title || '') + '</span><span class="reel-credit">' + esc(c.credit || '') + '</span></span></button></li>';
+    }).join('');
+
+    function embedUrl(c) {
+      var y = ytId(c.url);
+      if (y) return 'https://www.youtube-nocookie.com/embed/' + y + '?autoplay=1&rel=0&modestbranding=1&playsinline=1' + (c.start ? '&start=' + parseInt(c.start, 10) : '');
+      return 'https://www.instagram.com/reel/' + igId(c.url) + '/embed/';
+    }
+    function posterUrl(c) { var y = ytId(c.url); return y ? 'https://i.ytimg.com/vi/' + y + '/hqdefault.jpg' : (c.poster || (LIB.deloneRow && LIB.deloneRow.src)); }
+
+    function show(i, play) {
+      cur = i;
+      var c = ch[i];
+      $$('.reel-item', list).forEach(function (b, j) { b.setAttribute('aria-pressed', String(j === i)); });
+      player.classList.toggle('is-vertical', !!(play && igId(c.url)));
+      now.textContent = pad(i + 1) + ' / ' + pad(ch.length) + ' · ' + c.era;
+      var nx = ch[(i + 1) % ch.length];
+      $('span', next).textContent = i + 1 < ch.length ? 'Next: ' + nx.era : 'Back to the start';
+      if (play) {
+        player.innerHTML = '<iframe src="' + esc(embedUrl(c)) + '" title="' + esc(c.era + ': ' + (c.title || 'career highlight')) + '" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>';
+        track('reel_play', { chapter: c.era });
+        return;
+      }
+      player.innerHTML = '<img src="' + esc(posterUrl(c)) + '" alt="" loading="lazy" decoding="async">' +
+        '<button type="button" class="film-play" aria-label="Play ' + esc(c.era) + ' highlights"><span>Play</span></button>' +
+        '<div class="reel-cap"><span>' + pad(i + 1) + ' · ' + esc(c.era) + '</span><b>' + esc(c.title || '') + '</b></div>';
+      var img = $('img', player);
+      img.addEventListener('error', function () { if (c.poster && img.getAttribute('src') !== c.poster) img.src = c.poster; }, { once: true });
+      $('.film-play', player).addEventListener('click', function () { show(i, true); });
+    }
+
+    list.addEventListener('click', function (e) { var b = e.target.closest('.reel-item'); if (b) show(Number(b.getAttribute('data-i')), true); });
+    next.addEventListener('click', function () { show((cur + 1) % ch.length, true); });
+    show(0, false);
+
+    // The hero's film shortcut points at the tape.
+    var heroFilm = $('[data-hero-film]');
+    if (heroFilm) {
+      heroFilm.__taken = true;
+      var t = $('[data-hero-film-text]');
+      if (t) t.innerHTML = '<small>Film</small>High school to the pros — watch the tape';
+      heroFilm.hidden = false;
+      heroFilm.addEventListener('click', function () { scrollToEl(box); });
+    }
+  }
+
   function initFilm() {
     var fig = $('[data-film]');
     var frame = $('[data-film-frame]');
@@ -839,7 +904,7 @@
     if (!fig || !frame) return;
     var heroFilm = $('[data-hero-film]');
     var showHeroFilm = function (playable) {
-      if (!heroFilm) return;
+      if (!heroFilm || heroFilm.__taken) return;
       heroFilm.hidden = false;
       heroFilm.addEventListener('click', function () {
         scrollToEl(fig);
@@ -1449,6 +1514,7 @@
     initNav();
     initSlots();
     initHero();
+    initReel();
     initFilm();
     initChapters();
     initOffers();

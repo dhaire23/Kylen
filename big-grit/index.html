@@ -153,7 +153,7 @@
   <aside class="hero-quick" data-hero-in data-hero-quick aria-label="Start Find Your Grit">
     <button class="hq-film" type="button" data-hero-film hidden data-track="cta_click" data-cta="hero_film">
       <span class="hq-thumb"><img src="media/founder/delone-closeup-bw.webp" alt="" width="96" height="60" decoding="async"><span class="hq-play" aria-hidden="true"></span></span>
-      <span class="hq-film-txt"><small>Film</small>Delone's story, in his words</span>
+      <span class="hq-film-txt" data-hero-film-text><small>Film</small>Delone's story, in his words</span>
     </button>
     <div class="hq-step" aria-hidden="true"><span>Step 1/5</span><i><b></b></i></div>
     <label class="hq-q" for="hq-goal">What's your primary goal?</label>
@@ -309,6 +309,26 @@
   </div>
 
   <div class="wrap">
+    <section class="reel" id="the-tape" data-reel aria-labelledby="reel-title" hidden>
+      <header class="reel-head">
+        <div>
+          <p class="label"><span>Film</span> The tape</p>
+          <h3 class="reel-title" id="reel-title">High school <em>to the pro stage.</em></h3>
+        </div>
+        <p class="reel-intro">His career, in order — from Friday nights to Syracuse, the Colts and the IFBB Pro stage.</p>
+      </header>
+      <div class="reel-grid">
+        <div>
+          <div class="reel-player" data-reel-player></div>
+          <div class="reel-ctrl">
+            <span class="reel-now" data-reel-now aria-live="polite"></span>
+            <button class="reel-next" type="button" data-reel-next><span>Next chapter</span><i class="arrow" aria-hidden="true"></i></button>
+          </div>
+        </div>
+        <ol class="reel-list" data-reel-list aria-label="Career chapters"></ol>
+      </div>
+    </section>
+
     <figure class="film" data-film data-reveal="mask">
       <div class="film-frame" data-film-frame></div>
       <figcaption class="film-cap">

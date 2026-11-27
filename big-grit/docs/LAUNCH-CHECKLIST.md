@@ -21,6 +21,7 @@
 - [ ] **Client photos** — confirm each client in the three before/afters agreed in writing to appear on the site
 - [ ] **Payhip** — make a real test purchase of each playbook and confirm the PDF arrives (the earlier version noted checkout was still being tested)
 - [ ] **Football-era photo** for chapter 01 (Syracuse / Colts) — only if you hold usage rights
+- [ ] **The Tape** — play each chapter on the live site and set `start` times so each opens on the best moment; confirm the Instagram reel is public (private reels can't be embedded)
 - [ ] **Deploy to Netlify, enable form detection, add email notification, send a live test application** (see DEPLOY.md §2)
 - [x] `contactEmail`, Instagram, online application and macro calculator links set in `config/site.config.js` (confirm the email is the one Delone wants public)
 - [ ] **Domain** connected + `./scripts/set-domain.sh yourdomain.com`
